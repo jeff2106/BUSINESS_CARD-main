@@ -59,29 +59,30 @@ export default function ResultQrcode({ navigation, route }) {
       .catch((error) => console.log('error', error));
   }
 
+  
   function Delete() {
-    var myHeaders = new Headers();
-      myHeaders.append("Accept", "application/json");
-      myHeaders.append("Authorization", 'Bearer ' + Token + '');
-      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+      var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        myHeaders.append("Authorization", 'Bearer ' + Token + '');
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-      var urlencoded = new URLSearchParams();
-      urlencoded.append("id_user_de_card", idCartScaner);
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("id_user_de_card", idCartScaner);
 
-      var requestOptions = {
-        method: 'DELETE',
-        headers: myHeaders,
-        body: urlencoded,
-        redirect: 'follow'
-      };
+        var requestOptions = {
+          method: 'DELETE',
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: 'follow'
+        };
 
-      fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+id+"", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+        console.log(id,idCartScaner);
+
+        fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+id+"", requestOptions)
+          .then(response => response.text())
+          .then(result => console.log(result))
+          .catch(error => console.log('error', error));
     }
-
-  activeFav ? Favoris() : Delete();
 
   return (
     <View style={styles.container}>
@@ -99,14 +100,63 @@ export default function ResultQrcode({ navigation, route }) {
       <View style={styles.headFav}>
         {activeFav ? (
           <FontAwesome
-            onPress={() => setActiveFav(!activeFav)}
+            onPress={() => {
+                var myHeaders = new Headers();
+                myHeaders.append("Accept", "application/json");
+                myHeaders.append('Authorization', 'Bearer ' + Token + '');
+                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                
+                var urlencoded = new URLSearchParams();
+                urlencoded.append("id_user_de_card",idCartScaner);
+                
+                var requestOptions = {
+                  method: 'DELETE',
+                  headers: myHeaders,
+                  body: urlencoded,
+                  redirect: 'follow'
+                };
+                
+                fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+id+"/"+idCartScaner+"", requestOptions)
+                  .then(response => response.text())
+                  .then(result => console.log(result))
+                  .catch(error => console.log('error', error));setActiveFav(!activeFav)
+
+              }}
             name="star"
             size={24}
             color="#F07D00"
           />
         ) : (
           <FontAwesome
-            onPress={() => setActiveFav(!activeFav)}
+            onPress={() => {
+              
+              var myHeaders = new Headers();
+              myHeaders.append('Accept', 'application/json');
+              myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+              myHeaders.append('Authorization', 'Bearer ' + Token + '');
+          
+              var formdata = new FormData();
+              formdata.append('id_style_de_carte', 1);
+              formdata.append('id_user', id);
+              formdata.append("id_user_de_card", idCartScaner);
+          
+              var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: formdata,
+                redirect: 'follow',
+              };
+          
+              fetch(
+                'https://agnesmere-sarl.com/carte_visite/api/card/put_card_in_favoris',
+                requestOptions
+              )
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.log('error', error));
+                setActiveFav(!activeFav)
+
+              }}
             name="star-o"
             size={24}
             color="#F07D00"
@@ -331,7 +381,7 @@ export default function ResultQrcode({ navigation, route }) {
                     />
                   ) : (
                     <Image
-                      style={styles.tinyLogo}
+                      style={{ width: 130, height: 130, borderRadius: 10 }}
                       source={{
                         uri: DetailsUserScanner.data.user_picture,
                       }}

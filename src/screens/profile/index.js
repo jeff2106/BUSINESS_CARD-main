@@ -14,11 +14,7 @@ import {
 } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {
-  Ionicons,
-  AntDesign,
-  Foundation
-} from '@expo/vector-icons';
+import { Ionicons, AntDesign, Foundation } from '@expo/vector-icons';
 
 export default function Profile({ route, navigation }) {
   useEffect(() => {
@@ -28,10 +24,7 @@ export default function Profile({ route, navigation }) {
   const { Data, Token, id } = route.params;
   //console.log( Data, Token, id);
 
-  
-  
   const [show, setshow] = React.useState(true);
-
 
   const _Linkedin = () => {
     Linking.openURL(Data.data.card_informations.reseau.linkedin_acound);
@@ -66,10 +59,8 @@ export default function Profile({ route, navigation }) {
               source={{
                 uri: Data.data.user_picture,
               }}
-
             />
           )}
-          
         </View>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>
@@ -332,82 +323,75 @@ export default function Profile({ route, navigation }) {
     </View>
   );
   const Card = (
-    <View style={{marginTop:20}}>
-      <View
-        
-        style={styles.cardCentral}>
+    <View style={{ marginTop: 20 }}>
+      <View style={styles.cardCentral}>
         <View style={styles.headers}>
           <View
             style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
             <View style={styles.cardPhoto}>
-            {Data.data.user_picture == null ? (
-            <Image
-              source={require('../../assets/id.jpg')}
-              style={{ width: 50, height: 50, borderRadius: 10 }}
-            />
-          ) : (
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 10 }}
-              source={{
-                uri: Data.data.user_picture,
-              }}
-            />
-          )}
+              {Data.data.user_picture == null ? (
+                <Image
+                  source={require('../../assets/id.jpg')}
+                  style={{ width: 74, height: 74, borderRadius: 10 }}
+                />
+              ) : (
+                <Image
+                  style={{ width: 74, height: 74, borderRadius: 10 }}
+                  source={{
+                    uri: Data.data.user_picture,
+                  }}
+                />
+              )}
             </View>
             <View style={{ marginRight: -20 }}>
               <Text style={{ fontWeight: 'bold', letterSpacing: 2 }}>
-              {Data.data.name} 
+                {Data.data.name}
               </Text>
               <Text style={{ textAlign: 'center', opacity: 0.5 }}>
-              {Data.data.card_informations.user_job_position} 
+                {Data.data.card_informations.user_job_position}
               </Text>
             </View>
             <View style={[styles.cardPhoto]}>
               {/* <FontAwesome5 name="user-alt" size={24} color="grey" /> */}
               <Image
-                style={[styles.ImageQr,{height:"100%",width:"100%"}]}
-                source={{uri: Data.data.card_informations.card_qrcode}}
+                style={[styles.ImageQr, { height: '100%', width: '100%' }]}
+                source={{ uri: Data.data.card_informations.card_qrcode }}
               />
             </View>
           </View>
           <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
             <TouchableOpacity>
-            <Foundation
-              name="telephone"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
+              <Foundation
+                name="telephone"
+                size={18}
+                color="black"
+                style={{ marginLeft: 10 }}
+              />
             </TouchableOpacity>
             <TouchableOpacity>
-            <Ionicons
-              name="mail"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
+              <Ionicons
+                name="mail"
+                size={18}
+                color="black"
+                style={{ marginLeft: 10 }}
+              />
             </TouchableOpacity>
             <TouchableOpacity>
-            <AntDesign
-              name="linkedin-square"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
+              <AntDesign
+                name="linkedin-square"
+                size={18}
+                color="black"
+                style={{ marginLeft: 10 }}
+              />
             </TouchableOpacity>
             <TouchableOpacity>
-            <AntDesign
-              name="facebook-square"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
+              <AntDesign
+                name="facebook-square"
+                size={18}
+                color="black"
+                style={{ marginLeft: 10 }}
+              />
             </TouchableOpacity>
-          
-            
-            
-            
-            
           </View>
           <View
             style={{
@@ -417,29 +401,29 @@ export default function Profile({ route, navigation }) {
             }}>
             <View style={{ flexDirection: 'row' }}>
               <Ionicons name="location-sharp" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5,marginTop:3 }}>
-              {Data.data.user_adresse} 
+              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+                {Data.data.user_adresse}
               </Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Foundation name="web" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5,marginTop:3 }}>
-                www.{Data.data.card_informations.entreprise_website} 
+              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+                www.{Data.data.card_informations.entreprise_website}
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.footer}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ marginRight: 10, color: 'white',marginTop:3 }}>
-            {Data.data.card_informations.entreprise_name}
+            <Text style={{ marginRight: 10, color: 'white', marginTop: 3 }}>
+              {Data.data.card_informations.entreprise_name}
             </Text>
             <AntDesign name="chrome" size={24} color="white" />
           </View>
         </View>
       </View>
     </View>
-  )
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -456,39 +440,47 @@ export default function Profile({ route, navigation }) {
         </TouchableHighlight>
         {/* icon show start */}
         <View style={{ flexDirection: 'row', marginHorizontal: 10 }}>
-          {show == true ? <TouchableHighlight
-            underlayColor="transparent"
-            onPress={() => setshow(!show)}>
-            <View
-              style={{
-                backgroundColor: '#FAE7D3',
-                borderRadius: 50,
-                width: 40,
-                height: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginHorizontal: 5,
-              }}>
-              <Icon name="eye" size={30} color="#DA7200" pack="material" />
-            </View>
-          </TouchableHighlight> : <TouchableHighlight
-            underlayColor="transparent"
-            onPress={() => setshow(!show)}>
-            <View
-              style={{
-                backgroundColor: '#FAE7D3',
-                borderRadius: 50,
-                width: 40,
-                height: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginHorizontal: 5,
-              }}>
-              <Icon name="eye-off" size={30} color="#DA7200" pack="material" />
-            </View>
-          </TouchableHighlight>
-          }
-          
+          {show == true ? (
+            <TouchableHighlight
+              underlayColor="transparent"
+              onPress={() => setshow(!show)}>
+              <View
+                style={{
+                  backgroundColor: '#FAE7D3',
+                  borderRadius: 50,
+                  width: 40,
+                  height: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: 5,
+                }}>
+                <Icon name="eye" size={30} color="#DA7200" pack="material" />
+              </View>
+            </TouchableHighlight>
+          ) : (
+            <TouchableHighlight
+              underlayColor="transparent"
+              onPress={() => setshow(!show)}>
+              <View
+                style={{
+                  backgroundColor: '#FAE7D3',
+                  borderRadius: 50,
+                  width: 40,
+                  height: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginHorizontal: 5,
+                }}>
+                <Icon
+                  name="eye-off"
+                  size={30}
+                  color="#DA7200"
+                  pack="material"
+                />
+              </View>
+            </TouchableHighlight>
+          )}
+
           <TouchableHighlight
             underlayColor="transparent"
             onPress={() => {
@@ -496,7 +488,7 @@ export default function Profile({ route, navigation }) {
               navigation.navigate('EditProfile', {
                 Data: Data,
                 Token: Token,
-                id: id
+                id: id,
               });
             }}>
             <View
@@ -514,7 +506,32 @@ export default function Profile({ route, navigation }) {
           </TouchableHighlight>
           <TouchableHighlight
             underlayColor="transparent"
-            onPress={() => console.log('valide')}>
+            onPress=
+        {() => {
+          var myHeaders = new Headers();
+          myHeaders.append(
+            'Authorization',
+            'Bearer '+Token+''
+          );
+
+          var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            redirect: 'follow',
+          };
+
+          fetch(
+            'https://agnesmere-sarl.com/carte_visite/api/logout',
+            requestOptions
+          )
+            .then((response) => response.text())
+            .then((result) => {
+              console.log(result);
+              alert("Vous etes maintenant deconnecter")
+              navigation.navigate('Connexion');
+            })
+            .catch((error) => console.log('error', error));
+        }}>
             <View
               style={{
                 backgroundColor: '#FAE7D3',
@@ -524,17 +541,12 @@ export default function Profile({ route, navigation }) {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Icon
-                name="share-variant"
-                size={30}
-                color="#DA7200"
-                pack="material"
-              />
+              <AntDesign name="logout" size={24} color="#DA7200" />
             </View>
           </TouchableHighlight>
         </View>
         {/* icon show end */}
-
+        
       </View>
       {show == true ? Body : Card}
     </SafeAreaView>

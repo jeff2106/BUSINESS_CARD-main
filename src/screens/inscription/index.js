@@ -58,12 +58,13 @@ export default function Inscription({ navigation }) {
           .then((response) => response.json())
           .then((result) => {
             if (!result.message) {
+              console.log(result);
               navigation.navigate('AccueilScanne', {
                 id: result.user.id,
                 Token: result.token,
               });
             } else {
-              alert('Vous avez mal saisie une donnée');
+              alert('Ce compte existe deja');
             }
             console.log('Patience');
           })

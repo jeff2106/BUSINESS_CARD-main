@@ -14,26 +14,44 @@ import {
 import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeout from 'react-native-swipeout';
+import {useNavigation} from '@react-navigation/native';
 
-export const CarteForme = ({
-  image,
-  nom,
-  prenom,
-  qr,
-  poste,
-  phoneIcon,
-  emailIcon,
-  linkedinIcon,
-  facebookIcon,
-  localisationEntreprise,
-  siteWeb,
-  nomEntreprise,
-  cardIcon,
-  mail,
+export const CarteForme = (props,{
+  name_proprietaire,
+  adresse_proprietaire,
+  entreprise_name,
+  photo_proprietaire,
+  id_scanneur,
+  id_user_card,
+  Token
+
 }) => {
+  const navigation = useNavigation();
   const RenderButtonDelete = () => {
+    console.log(props.id_user_card,props.id_scanneur);
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          var myHeaders = new Headers();
+            myHeaders.append("Accept", "application/json");
+            myHeaders.append("Authorization", 'Bearer 58|8CiW6XY1GSSvwuyRIxd7maWnMr7L2R5ubnic81yq');
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("id_carte_proprietaire", props.id_user_card);
+
+            var requestOptions = {
+              method: 'DELETE',
+              headers: myHeaders,
+              body: urlencoded,
+              redirect: 'follow'
+            };
+
+            fetch("https://agnesmere-sarl.com/carte_visite/api/card/delete_scanned_card/"+props.id_scanneur+"", requestOptions)
+              .then(response => response.text())
+              .then(result => console.log(result))
+              .catch(error => console.log('error', error));
+        }}
         style={{
           flex: 1,
           backgroundColor: '#E4E4E4',
@@ -41,6 +59,7 @@ export const CarteForme = ({
           alignItems: 'center',
           margin: 0,
           padding: 0,
+          
         }}>
         <Icon
           name="delete"
@@ -49,7 +68,7 @@ export const CarteForme = ({
           pack="material"
           style={{ marginHorizontal: 5 }}
         />
-      </View>
+      </TouchableOpacity>
     );
   };
   const swipeoutBtns = [
@@ -61,7 +80,7 @@ export const CarteForme = ({
     <Swipeout
       autoClose
       right={swipeoutBtns}
-      style={{ backgroundColor: '#fff', borderRadius: 20 }}>
+      style={{ backgroundColor: '#fff', borderRadius: 20, }}>
       <SafeAreaView style={styles.CarteForme}>
         <View
           style={{
@@ -71,7 +90,19 @@ export const CarteForme = ({
             width: '78%',
           }}>
           <View>
-            <Image source={image} style={styles.idPhotoCarte} />
+          <Image 
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderWidth: 3,
+                  borderColor: '#DA7200',
+                  borderRadius: 5,
+                }}
+                source={{
+                uri: photo_proprietaire,
+              }}
+            />
+          
           </View>
           <View
             style={{
@@ -84,7 +115,7 @@ export const CarteForme = ({
                 margin: 10,
                 flexDirection: 'row',
               }}>
-              <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{prenom}</Text>
+              
               <Text
                 style={{
                   marginHorizontal: 5,
@@ -92,10 +123,10 @@ export const CarteForme = ({
                   fontWeight: 'bold',
                   fontSize: 18
                 }}>
-                {nom}
+                {props.user_job_position}
               </Text>
             </View>
-            <Text>{poste}</Text>
+            <Text>{props.adresse_proprietaire}</Text>
           </View>
         </View>
         <View
@@ -120,7 +151,7 @@ export const CarteForme = ({
                 pack="material"
               />
               <Text style={{ marginHorizontal: 10 }}>
-                {localisationEntreprise}
+                {props.adresse_proprietaire}
               </Text>
             </View>
             <View style={{ flexDirection: 'row', margin: 10 }}>
@@ -130,7 +161,7 @@ export const CarteForme = ({
                 color="#A2A2A2"
                 pack="material"
               />
-              <Text style={{ marginHorizontal: 10 }}>{siteWeb}</Text>
+              <Text style={{ marginHorizontal: 10 }}>{props.entreprise_website}</Text>
             </View>
             <View
               style={{
@@ -146,27 +177,29 @@ export const CarteForme = ({
                   pack="material"
                 />
                 <Text style={{ marginHorizontal: 10, color: '#fff' }}>
-                  {mail}
+                  {props.email_proprietaire}
                 </Text>
               </View>
             </View>
           </View>
           <View style={{ marginHorizontal: 10 }}>
-            <Image
-              source={qr}
-              style={{
-                width: 70,
-                height: 70,
-                borderWidth: 3,
-                borderColor: '#DA7200',
-                borderRadius: 5,
+          <Image 
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderWidth: 3,
+                  borderColor: '#DA7200',
+                  borderRadius: 5,
+                }}
+                source={{
+                uri: props.card_qrcode,
               }}
             />
           </View>
         </View>
         <View>
           <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DA7200' }}>
-            {nomEntreprise}
+            {props.entreprise_name}
           </Text>
         </View>
       </SafeAreaView>

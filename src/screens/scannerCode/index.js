@@ -27,7 +27,7 @@ export default function ScannerCode({ navigation, route }) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    console.log(id);
+    console.log(data);
     var myHeaders = new Headers();
     myHeaders.append('Accept', 'application/json');
     myHeaders.append('Authorization', 'Bearer ' + Token + '');

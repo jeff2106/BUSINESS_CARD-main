@@ -37,9 +37,10 @@ export default function Connexion({ navigation }) {
     };
 
     fetch('https://agnesmere-sarl.com/carte_visite/api/login', requestOptions)
-      .then((response) => response.text())
+      .then((response) => response.json())
       .then((result) => {
         if (!result.message) {
+          console.log(result);
           navigation.navigate('AccueilScanne', {
             id: result.user.id,
             Token: result.token,

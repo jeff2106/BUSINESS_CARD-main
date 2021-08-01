@@ -26,8 +26,9 @@ export default function Profile({ route, navigation }) {
   }, []);
 
   const { Data, Token, id } = route.params;
-
   //console.log( Data, Token, id);
+
+  
   
   const [show, setshow] = React.useState(true);
 

@@ -9,12 +9,11 @@ import {
   ScrollView,
   Dimensions,
   Alert,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
 import { Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import localStorage from 'react-native-sync-localstorage';
 import { clearStorage, getStorage, setStorage } from 'react-native-storer';
-
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,51 +25,56 @@ export default function Inscription({ navigation }) {
   const [UserMail, setUserMail] = React.useState('none');
   const [UserPsw1, setUserPsw1] = React.useState('none');
   const [UserPsw2, setUserPsw2] = React.useState('none');
-  const  [Data, setData] = React.useState('');
-  const  [Token, setToken] = React.useState('');
 
-    //CONNEXION AVEC L API //
-    const SendData = () => {
-      if(UserNumber != "none" && UserMail != "none" && UserPsw1 != "none" && UserPsw2 != "none" ){
-        var myHeaders = new Headers();
-      myHeaders.append("Accept", "application/json");
-      
+  //CONNEXION AVEC L API //
+  const SendData = () => {
+    if (
+      UserNumber != 'none' &&
+      UserMail != 'none' &&
+      UserPsw1 != 'none' &&
+      UserPsw2 != 'none'
+    ) {
+      var myHeaders = new Headers();
+      myHeaders.append('Accept', 'application/json');
+
       var formdata = new FormData();
-      formdata.append("email", UserMail);
-      formdata.append("phone_number", UserNumber);
-      formdata.append("password", UserPsw1);
-      formdata.append("password_confirmation", UserPsw2);
-      
-      if(UserPsw1 == UserPsw2){
+      formdata.append('email', UserMail);
+      formdata.append('phone_number', UserNumber);
+      formdata.append('password', UserPsw1);
+      formdata.append('password_confirmation', UserPsw2);
 
+      if (UserPsw1 == UserPsw2) {
         var requestOptions = {
           method: 'POST',
           headers: myHeaders,
           body: formdata,
-          redirect: 'follow'
+          redirect: 'follow',
         };
-        
-        fetch("https://agnesmere-sarl.com/carte_visite/api/register", requestOptions)
-          .then(response => response.json())
-          .then(result => {
-            if(!result.message){
-              setData(result);
-              alert("Votre compte viens d'etre crée avec succès...");
-            }else{
-              alert("Cet Email est deja utiliser");
+
+        fetch(
+          'https://agnesmere-sarl.com/carte_visite/api/register',
+          requestOptions
+        )
+          .then((response) => response.json())
+          .then((result) => {
+            if (!result.message) {
+              navigation.navigate('AccueilScanne', {
+                id: result.user.id,
+                Token: result.token,
+              });
+            } else {
+              alert('Vous avez mal saisie une donnée');
             }
+            console.log('Patience');
           })
-          .catch(error => console.log('error', error));
-          
-      }else{
-        alert("Vos Mot de passe sont different");
+          .catch((error) => console.log('error', error));
+      } else {
+        alert('Vos Mot de passe sont different');
       }
-      }else{
-        alert("Les champs doivent etre renseigner");
-      }
-      
+    } else {
+      alert('Les champs doivent etre renseigner');
     }
-    
+  };
 
   return (
     <ScrollView>
@@ -79,24 +83,27 @@ export default function Inscription({ navigation }) {
           style={styles.images}
           source={require('../../assets/logo.png')}
         />
-        <TextInput 
-        onChangeText={UserNumber => setUserNumber(UserNumber)}
-        style={styles.textInput} placeholder="Numéro de téléphone" 
-        keyboardAppearance="dark"
+        <TextInput
+          onChangeText={(UserNumber) => setUserNumber(UserNumber)}
+          style={styles.textInput}
+          placeholder="Numéro de téléphone"
+          keyboardAppearance="dark"
         />
 
-        <TextInput style={styles.textInput} 
-        onChangeText={UserMail => setUserMail(UserMail)}
-        keyboardAppearance="dark"
-        keyboardType="email-address"
-        placeholder="Email" />
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(UserMail) => setUserMail(UserMail)}
+          keyboardAppearance="dark"
+          keyboardType="email-address"
+          placeholder="Email"
+        />
         <View style={[styles.row, styles.justifyCenter, styles.shadow]}>
           <TextInput
             secureTextEntry={checkPassword}
             style={styles.textInput2}
             placeholder="Mot de passe"
             keyboardAppearance="dark"
-            onChangeText={UserPsw1 => setUserPsw1(UserPsw1)}
+            onChangeText={(UserPsw1) => setUserPsw1(UserPsw1)}
           />
           {checkPassword ? (
             <Feather
@@ -124,7 +131,7 @@ export default function Inscription({ navigation }) {
             style={styles.textInput2}
             placeholder="Confirmer le Mot de passe"
             keyboardAppearance="dark"
-            onChangeText={UserPsw2 => setUserPsw2(UserPsw2)}
+            onChangeText={(UserPsw2) => setUserPsw2(UserPsw2)}
           />
           {checkPasswordC ? (
             <Feather
@@ -153,7 +160,11 @@ export default function Inscription({ navigation }) {
           <Text style={[{ color: 'white' }]}>Inscription</Text>
         </TouchableOpacity>
 
-        <Text style={{textAlign:"center"}} onPress={() => navigation.navigate('Connexion')}>Se connecter</Text>
+        <Text
+          style={{ textAlign: 'center' }}
+          onPress={() => navigation.navigate('Connexion')}>
+          Se connecter
+        </Text>
 
         <TouchableOpacity
           style={[styles.btnSocialG, styles.row, styles.justifyCenter]}
@@ -180,7 +191,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 24,
-    marginTop:-50,
+    marginTop: -50,
     flex: 1,
     width: windowWidth,
     height: windowHeight,
@@ -239,7 +250,7 @@ const styles = StyleSheet.create({
     height: '7%',
     borderRadius: 15,
     marginBottom: 5,
-    marginTop:10
+    marginTop: 10,
   },
   btnSocialG: {
     backgroundColor: '#EC002A',

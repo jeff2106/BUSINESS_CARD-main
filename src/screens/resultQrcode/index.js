@@ -27,28 +27,61 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function ResultQrcode({ navigation, route }) {
-  const { ContentScanne, id,Token, Data } = route.params;
+  const { DetailsUserScanner, id, Token, Data, idCartScaner } = route.params;
   const [activeFav, setActiveFav] = useState(false);
   const [activeVal, setActiveVal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [DetailsUserScanner, setDetailsUserScanner] = useState();
 
+  function Favoris() {
+    var myHeaders = new Headers();
+    myHeaders.append('Accept', 'application/json');
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+    myHeaders.append('Authorization', 'Bearer ' + Token + '');
 
+    var formdata = new FormData();
+    formdata.append('id_style_de_carte', 1);
+    formdata.append('id_user', id);
+    formdata.append("id_user_de_card", idCartScaner);
 
-  var myHeaders = new Headers();
-  myHeaders.append("Authorization", "Bearer "+Token+"");
-  
-  var requestOptions = {
-    method: 'GET',
-    headers: myHeaders,
-    redirect: 'follow'
-  };
-  
-  fetch("https://agnesmere-sarl.com/carte_visite/api/user/"+ContentScanne+"", requestOptions)
-    .then(response => response.json())
-    .then(result => setDetailsUserScanner(result))
-    .catch(error => console.log('error', error));
-  
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch(
+      'https://agnesmere-sarl.com/carte_visite/api/card/put_card_in_favoris',
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log('error', error));
+  }
+
+  function Delete() {
+    var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+      myHeaders.append("Authorization", 'Bearer ' + Token + '');
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("id_user_de_card", idCartScaner);
+
+      var requestOptions = {
+        method: 'DELETE',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+id+"", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
+
+  activeFav ? Favoris() : Delete();
 
   return (
     <View style={styles.container}>
@@ -87,33 +120,45 @@ export default function ResultQrcode({ navigation, route }) {
           <View
             style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
             <View style={styles.cardPhoto}>
-            {DetailsUserScanner.data.user_picture == null ? (
-            <Image
-              source={require('../../assets/id.jpg')}
-              style={{ width: 90,marginLeft:8, height: 90, borderRadius: 10 }}
-            />
-          ) : (
-            <Image
-              style={{ width: 90,marginLeft:8, height: 90, borderRadius: 10 }}
-              source={{
-                uri: DetailsUserScanner.data.user_picture,
-              }}
-            />
-          )}
+              {DetailsUserScanner.data.user_picture == null ? (
+                <Image
+                  source={require('../../assets/id.jpg')}
+                  style={{
+                    width: 90,
+                    marginLeft: 8,
+                    height: 90,
+                    borderRadius: 10,
+                  }}
+                />
+              ) : (
+                <Image
+                  style={{
+                    width: 90,
+                    marginLeft: 8,
+                    height: 90,
+                    borderRadius: 10,
+                  }}
+                  source={{
+                    uri: DetailsUserScanner.data.user_picture,
+                  }}
+                />
+              )}
             </View>
             <View style={{ marginRight: -20 }}>
-              <Text style={{ fontWeight: 'bold', }}>
+              <Text style={{ fontWeight: 'bold' }}>
                 {DetailsUserScanner.data.name}
               </Text>
-              <Text style={{  opacity: 0.5 }}>
-              {DetailsUserScanner.data.card_informations.user_job_position}
+              <Text style={{ opacity: 0.5 }}>
+                {DetailsUserScanner.data.card_informations.user_job_position}
               </Text>
             </View>
             <View style={[styles.cardPhoto]}>
               {/* <FontAwesome5 name="user-alt" size={24} color="grey" /> */}
               <Image
-                style={[styles.ImageQr,{height:"102%",width:"102%"}]}
-                source={{uri: DetailsUserScanner.data.card_informations.card_qrcode}}
+                style={[styles.ImageQr, { height: '102%', width: '102%' }]}
+                source={{
+                  uri: DetailsUserScanner.data.card_informations.card_qrcode,
+                }}
               />
             </View>
           </View>
@@ -151,23 +196,22 @@ export default function ResultQrcode({ navigation, route }) {
             }}>
             <View style={{ flexDirection: 'row' }}>
               <Ionicons name="location-sharp" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5 ,marginTop:3 }}>
-              {DetailsUserScanner.data.user_adresse}
+              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+                {DetailsUserScanner.data.user_adresse}
               </Text>
             </View>
             <View style={{ flexDirection: 'row' }}>
               <Foundation name="web" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5 ,marginTop:3  }}>
-                
-              {DetailsUserScanner.data.card_informations.entreprise_website}
+              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+                {DetailsUserScanner.data.card_informations.entreprise_website}
               </Text>
             </View>
           </View>
         </View>
         <View style={styles.footer}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ marginRight: 10, color: 'white',marginTop:5 }}>
-            {DetailsUserScanner.data.card_informations.entreprise_name}
+            <Text style={{ marginRight: 10, color: 'white', marginTop: 5 }}>
+              {DetailsUserScanner.data.card_informations.entreprise_name}
             </Text>
             <AntDesign name="chrome" size={24} color="white" />
           </View>
@@ -187,10 +231,13 @@ export default function ResultQrcode({ navigation, route }) {
 
       {activeVal ? (
         <TouchableOpacity
-          onPress={() => navigation.navigate('AccueilScanne',{
-            id:id,
-            Data: Data,
-            Token: Token})}
+          onPress={() =>
+            navigation.navigate('AccueilScanne', {
+              id: id,
+              Data: Data,
+              Token: Token,
+            })
+          }
           style={[styles.floatTouch, { height: 65, width: 65 }]}>
           <Fontisto name="hipchat" size={24} color="white" />
         </TouchableOpacity>
@@ -277,19 +324,19 @@ export default function ResultQrcode({ navigation, route }) {
             <View style={styles.bodyModal}>
               <View style={styles.cardPro1}>
                 <View style={styles.profilCard}>
-                {DetailsUserScanner.data.user_picture == null ? (
-                  <Image
-                    source={require('../../assets/id.jpg')}
-                    style={{ width: 130, height: 130, borderRadius: 10 }}
-                  />
-                ) : (
-                  <Image
-                    style={styles.tinyLogo}
-                    source={{
-                      uri: DetailsUserScanner.data.user_picture,
-                    }}
-                  />
-                )}
+                  {DetailsUserScanner.data.user_picture == null ? (
+                    <Image
+                      source={require('../../assets/id.jpg')}
+                      style={{ width: 130, height: 130, borderRadius: 10 }}
+                    />
+                  ) : (
+                    <Image
+                      style={styles.tinyLogo}
+                      source={{
+                        uri: DetailsUserScanner.data.user_picture,
+                      }}
+                    />
+                  )}
                 </View>
                 <View>
                   <Text
@@ -300,12 +347,16 @@ export default function ResultQrcode({ navigation, route }) {
                     }}>
                     {DetailsUserScanner.data.name}
                   </Text>
-                  
+
                   <Text style={{ opacity: 0.5 }}>
-                  {DetailsUserScanner.data.card_informations.user_job_position}{'\n'}
+                    {
+                      DetailsUserScanner.data.card_informations
+                        .user_job_position
+                    }
+                    {'\n'}
                   </Text>
                   <Text style={{ opacity: 0.5, width: '65%' }}>
-                  {DetailsUserScanner.data.user_biographie}
+                    {DetailsUserScanner.data.user_biographie}
                   </Text>
                 </View>
               </View>
@@ -349,11 +400,10 @@ export default function ResultQrcode({ navigation, route }) {
                   <Foundation name="telephone" size={35} color="black" />
                 </View>
                 <View>
-                  <Text
-                    style={{ marginLeft: 5, marginTop: 5, }}>
-                    Mobile
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Mobile</Text>
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>
+                    +225 {DetailsUserScanner.data.phone_number}
                   </Text>
-                  <Text style={{ marginLeft: 5,marginTop:5 }}>+225 {DetailsUserScanner.data.phone_number}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={styles.SousCard}>
@@ -368,11 +418,8 @@ export default function ResultQrcode({ navigation, route }) {
                   <Ionicons name="mail" size={30} color="black" />
                 </View>
                 <View>
-                  <Text
-                    style={{ marginLeft: 5, marginTop: 5, }}>
-                    Email
-                  </Text>
-                  <Text style={{ marginLeft: 5,marginTop:5 }}>
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Email</Text>
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>
                     {DetailsUserScanner.data.email}
                   </Text>
                 </View>
@@ -389,11 +436,10 @@ export default function ResultQrcode({ navigation, route }) {
                   <Ionicons name="location-sharp" size={30} color="black" />
                 </View>
                 <View>
-                  <Text
-                    style={{ marginLeft: 5, marginTop: 5, }}>
-                    Adresse
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Adresse</Text>
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>
+                    {DetailsUserScanner.data.user_adresse}
                   </Text>
-                  <Text style={{ marginLeft: 5,marginTop:5 }}>{DetailsUserScanner.data.user_adresse}</Text>
                 </View>
               </TouchableOpacity>
               <TouchableOpacity style={styles.SousCard}>
@@ -408,91 +454,100 @@ export default function ResultQrcode({ navigation, route }) {
                   <Foundation name="web" size={30} color="black" />
                 </View>
                 <View>
-                  <Text
-                    style={{ marginLeft: 5, marginTop: 5, }}>
-                    Site web
+                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Site web</Text>
+                  <Text style={{ marginLeft: 5 }}>
+                    {
+                      DetailsUserScanner.data.card_informations
+                        .entreprise_website
+                    }
                   </Text>
-                  <Text style={{ marginLeft: 5 }}>{DetailsUserScanner.data.card_informations.entreprise_website}</Text>
                 </View>
               </TouchableOpacity>
               <Text style={{ fontSize: 16, marginTop: 10 }}>Document</Text>
 
-              {DetailsUserScanner.data.document == null ? <Text style={{textAlign:"center"}}>Aucun document</Text> : <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity
-                  style={[styles.rond, { borderRadius: 10, height: 80 }]}>
-                  <FontAwesome name="file-pdf-o" size={24} color="#FF0014" />
-                  <Text style={{ fontSize: 5 }}>
-                    {'\n'}telecharger Document{'\n'}
-                  </Text>
-                  <MaterialIcons
-                    name="file-download"
-                    size={15}
-                    color="#DA7200"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.rond, { borderRadius: 10, height: 80 }]}>
-                  <MaterialCommunityIcons
-                    name="file-word"
-                    size={24}
-                    color="#0C41A8"
-                  />
-                  <Text style={{ fontSize: 5 }}>
-                    {'\n'}telecharger Document{'\n'}
-                  </Text>
-                  <MaterialIcons
-                    name="file-download"
-                    size={15}
-                    color="#DA7200"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.rond, { borderRadius: 10, height: 80 }]}>
-                  <FontAwesome name="file-pdf-o" size={24} color="#FF0014" />
-                  <Text style={{ fontSize: 5 }}>
-                    {'\n'}telecharger Document{'\n'}
-                  </Text>
-                  <MaterialIcons
-                    name="file-download"
-                    size={15}
-                    color="#DA7200"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.rond, { borderRadius: 10, height: 80 }]}>
-                  <MaterialCommunityIcons
-                    name="file-word"
-                    size={24}
-                    color="#0C41A8"
-                  />
-                  <Text style={{ fontSize: 5 }}>
-                    {'\n'}telecharger Document{'\n'}
-                  </Text>
-                  <MaterialIcons
-                    name="file-download"
-                    size={15}
-                    color="#DA7200"
-                  />
-                </TouchableOpacity>
-              </View>}
+              {DetailsUserScanner.data.document == null ? (
+                <Text style={{ textAlign: 'center' }}>Aucun document</Text>
+              ) : (
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    <FontAwesome name="file-pdf-o" size={24} color="#FF0014" />
+                    <Text style={{ fontSize: 5 }}>
+                      {'\n'}telecharger Document{'\n'}
+                    </Text>
+                    <MaterialIcons
+                      name="file-download"
+                      size={15}
+                      color="#DA7200"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    <MaterialCommunityIcons
+                      name="file-word"
+                      size={24}
+                      color="#0C41A8"
+                    />
+                    <Text style={{ fontSize: 5 }}>
+                      {'\n'}telecharger Document{'\n'}
+                    </Text>
+                    <MaterialIcons
+                      name="file-download"
+                      size={15}
+                      color="#DA7200"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    <FontAwesome name="file-pdf-o" size={24} color="#FF0014" />
+                    <Text style={{ fontSize: 5 }}>
+                      {'\n'}telecharger Document{'\n'}
+                    </Text>
+                    <MaterialIcons
+                      name="file-download"
+                      size={15}
+                      color="#DA7200"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    <MaterialCommunityIcons
+                      name="file-word"
+                      size={24}
+                      color="#0C41A8"
+                    />
+                    <Text style={{ fontSize: 5 }}>
+                      {'\n'}telecharger Document{'\n'}
+                    </Text>
+                    <MaterialIcons
+                      name="file-download"
+                      size={15}
+                      color="#DA7200"
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           </View>
         </ScrollView>
         {activeVal ? (
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AccueilScanne',{
-            id:id,
-            Token: Token})}
-          style={[styles.floatTouch, { height: 65, width: 65 }]}>
-          <Fontisto name="hipchat" size={24} color="white" />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          onPress={() => setActiveVal(!activeVal)}
-          style={[styles.floatTouch, { height: 65, width: 65 }]}>
-          <Feather name="check" size={24} color="white" />
-        </TouchableOpacity>
-      )}
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('AccueilScanne', {
+                id: id,
+                Token: Token,
+              })
+            }
+            style={[styles.floatTouch, { height: 65, width: 65 }]}>
+            <Fontisto name="hipchat" size={24} color="white" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => setActiveVal(!activeVal)}
+            style={[styles.floatTouch, { height: 65, width: 65 }]}>
+            <Feather name="check" size={24} color="white" />
+          </TouchableOpacity>
+        )}
       </Modal>
       {/* END */}
     </View>

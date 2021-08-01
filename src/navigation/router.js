@@ -21,7 +21,7 @@ const Stack = createStackNavigator();
 const Router = (props) => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Inscription" headerMode="none">
+      <Stack.Navigator initialRouteName="Connexion" headerMode="none">
       <Stack.Screen
           name={'Inscription'}
           component={Inscription}

@@ -16,7 +16,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function ScannerCode({ navigation, route }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const { id,Token, Data} = route.params;
+  const { id, Token, Data } = route.params;
 
   useEffect(() => {
     (async () => {
@@ -27,13 +27,61 @@ export default function ScannerCode({ navigation, route }) {
 
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    alert(data,Token);
-    
+    console.log(id);
+    var myHeaders = new Headers();
+    myHeaders.append('Accept', 'application/json');
+    myHeaders.append('Authorization', 'Bearer ' + Token + '');
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+
+    var formdata = new FormData();
+    formdata.append('id_card_scanned', data);
+    formdata.append('id_scanneur', id);
+    formdata.append('id_style_de_carte', 1);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch(
+      'https://agnesmere-sarl.com/carte_visite/api/card/store_scanned_card',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log('error', error));
+
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', 'Bearer ' + Token + '');
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+
+    fetch(
+      'https://agnesmere-sarl.com/carte_visite/api/user/' + data + '',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) =>
+        navigation.navigate('ResultQrcode', {
+          Data: Data,
+          Token: Token,
+          id: id,
+          DetailsUserScanner: result,
+          idCartScaner: data,
+        })
+      )
+      .catch((error) => console.log('error', error));
   };
 
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
-  } 
+  }
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
@@ -81,7 +129,7 @@ const styles = StyleSheet.create({
     width: '50%',
     height: '50%',
     alignSelf: 'center',
-    opacity:0.3
+    opacity: 0.3,
   },
   footer: {
     justifyContent: 'center',

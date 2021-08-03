@@ -142,7 +142,7 @@ export default  function AccueilScanne({ route, navigation }) {
 
   
   //ACCUEILL
-  const Accueil = <View  style={{ flex: 1 }}>
+  const Accueil =( <View  style={{ flex: 1 }}>
                 <View style={{ marginTop:10 }}>
                       <Text style={{ textAlign: 'center' }}>
                         Vous n'avez pas de carte de visite
@@ -163,7 +163,7 @@ export default  function AccueilScanne({ route, navigation }) {
                         Touchez ici pour créer une carte de visite
                       </Text>
                     </View>
-                </View>
+                </View>)
 
  
   
@@ -481,12 +481,17 @@ const Card = (
         {/* Toutes les cartes */}
        
       </View>
-      <View style={{ flex: 1 }}>
-          {Home && (SecondData != null) && (
-            Card
+      <View style={{ flex: 1,backgroundColor:"red" }}>
+          {Home && (!SecondData?.data.card_informations.user_job_position) && (
+            <View style={{ marginTop: 40 }}>
+            <View style={[styles.cardCentral,{backgroundColor:null,borderRadius:null}]}>
+              {Accueil}
+              </View>
+              </View>
           )}
-          {Home && (SecondData == null) && (
-            Accueil
+          
+          {Home && (SecondData?.data.card_informations.user_job_position != null) && (
+            Card
           )}
           {HistoriqueS ==  true ? Historique : <Text></Text>}
           

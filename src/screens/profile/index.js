@@ -15,6 +15,7 @@ import {
 import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons, AntDesign, Foundation } from '@expo/vector-icons';
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 
 export default function Profile({ route, navigation }) {
   useEffect(() => {
@@ -25,6 +26,7 @@ export default function Profile({ route, navigation }) {
   //console.log( Data, Token, id);
 
   const [show, setshow] = React.useState(true);
+  const [Spinner, setSpinner] = React.useState(true);
 
   const _Linkedin = () => {
     Linking.openURL(Data.data.card_informations.reseau.linkedin_acound);
@@ -424,10 +426,28 @@ export default function Profile({ route, navigation }) {
       </View>
     </View>
   );
-
+  let Loader 
+  if(Data?.data){
+     Loader = <OrientationLoadingOverlay
+    visible={false}
+    color="white"
+    indicatorSize="large"
+    messageFontSize={10}
+    message="Veillez patienter un moment!!"
+  />
+  }else{
+     Loader = <OrientationLoadingOverlay
+    visible={true}
+    color="white"
+    indicatorSize="large"
+    messageFontSize={10}
+    message="Veillez patienter un moment!!"
+  />
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        {Loader}
         <TouchableHighlight
           underlayColor="transparent"
           onPress={() => {
@@ -525,15 +545,31 @@ export default function Profile({ route, navigation }) {
             headers: myHeaders,
             redirect: 'follow',
           };
-
+          setSpinner(!Spinner);
           fetch(
             'https://agnesmere-sarl.com/carte_visite/api/logout',
             requestOptions
           )
             .then((response) => response.text())
             .then((result) => {
-              console.log(result);
-              alert("Vous etes maintenant deconnecter")
+              if(result){
+                Loader = <OrientationLoadingOverlay
+               visible={false}
+               color="white"
+               indicatorSize="large"
+               messageFontSize={10}
+               message="Veillez patienter un moment!!"
+             />
+             }else{
+                Loader = <OrientationLoadingOverlay
+               visible={true}
+               color="white"
+               indicatorSize="large"
+               messageFontSize={10}
+               message="Veillez patienter un moment!!"
+             />
+             }
+              alert("Vous etes maintenant deconnecter");
               navigation.navigate('Connexion');
             })
             .catch((error) => console.log('error', error));

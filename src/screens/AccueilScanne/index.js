@@ -57,7 +57,7 @@ export default function AccueilScanne({ route, navigation }) {
       .then((result) => setSecondData(result))
       .catch((error) => console.log('error user', error));
   });
-
+  
   //HISTORIQUE
   function ShowDataHistorique() {
     var myHeaders = new Headers();
@@ -283,10 +283,27 @@ export default function AccueilScanne({ route, navigation }) {
     </View>
   );
 //Spinner
-
+let Loader 
+if(SecondData?.data){
+   Loader = <OrientationLoadingOverlay
+  visible={false}
+  color="white"
+  indicatorSize="large"
+  messageFontSize={10}
+  message="Veillez patienter un moment!!"
+/>
+}else{
+   Loader = <OrientationLoadingOverlay
+  visible={true}
+  color="white"
+  indicatorSize="large"
+  messageFontSize={10}
+  message="Veillez patienter un moment!!"
+/>
+}
   return (
     <SafeAreaView style={styles.container}>
-      
+      {Loader}
       <View style={{ flex: 0.4 }}>
         <View style={styles.header}>
           <StatusBar animated={true} backgroundColor="#DA7200" />

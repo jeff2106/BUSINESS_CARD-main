@@ -48,7 +48,7 @@ export const CarteForme = (props,{
             };
 
             fetch("https://agnesmere-sarl.com/carte_visite/api/card/delete_scanned_card/"+props.id_scanneur+"", requestOptions)
-              .then(response => response.text())
+              .then(response => response.json())
               .then(result => console.log(result))
               .catch(error => console.log('error', error));
         }}
@@ -99,7 +99,7 @@ export const CarteForme = (props,{
                   borderRadius: 5,
                 }}
                 source={{
-                uri: photo_proprietaire,
+                uri: props.photo_proprietaire,
               }}
             />
           

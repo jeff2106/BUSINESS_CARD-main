@@ -14,6 +14,7 @@ import {
 import { Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import localStorage from 'react-native-sync-localstorage';
 import { clearStorage, getStorage, setStorage } from 'react-native-storer';
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,7 +26,7 @@ export default function Inscription({ navigation }) {
   const [UserMail, setUserMail] = React.useState('none');
   const [UserPsw1, setUserPsw1] = React.useState('none');
   const [UserPsw2, setUserPsw2] = React.useState('none');
-
+  const [Spinner, setSpinner] = React.useState(false);
   //CONNEXION AVEC L API //
   const SendData = () => {
     if (
@@ -50,21 +51,26 @@ export default function Inscription({ navigation }) {
           body: formdata,
           redirect: 'follow',
         };
-
+        setSpinner(!Spinner);
         fetch(
           'https://agnesmere-sarl.com/carte_visite/api/register',
           requestOptions
         )
           .then((response) => response.json())
           .then((result) => {
+            setSpinner(!Spinner);
             if (!result.message) {
+              setSpinner(false);
               console.log(result);
               navigation.navigate('AccueilScanne', {
                 id: result.user.id,
                 Token: result.token,
               });
-            } else {
-              alert('Ce compte existe deja');
+              setSpinner(false);
+              console.log("Notre Token "+Token);
+            }else {
+              setSpinner(false);
+              alert('Vous avez mal saisie une donnée');
             }
             console.log('Patience');
           })
@@ -76,7 +82,13 @@ export default function Inscription({ navigation }) {
       alert('Les champs doivent etre renseigner');
     }
   };
-
+  const Loader = <OrientationLoadingOverlay
+  visible={Spinner}
+  color="white"
+  indicatorSize="large"
+  messageFontSize={10}
+  message="Veillez patienter un moment!!"
+/>
   return (
     <ScrollView>
       <View style={styles.container}>

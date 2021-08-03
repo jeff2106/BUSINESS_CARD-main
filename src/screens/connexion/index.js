@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
-import Spinner from 'react-native-loading-spinner-overlay';
+import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -35,18 +35,22 @@ export default function Connexion({ navigation }) {
       body: formdata,
       redirect: 'follow',
     };
-
+    setSpinner(!Spinner);
     fetch('https://agnesmere-sarl.com/carte_visite/api/login', requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        setSpinner(!Spinner);
         if (!result.message) {
-          console.log(result);
+          setSpinner(false);
+          
           navigation.navigate('AccueilScanne', {
             id: result.user.id,
             Token: result.token,
           });
+          setSpinner(false);
           console.log("Notre Token "+Token);
         }else {
+          setSpinner(false);
           alert('Vous avez mal saisie une donnée');
         }
         console.log('Patience');
@@ -54,15 +58,18 @@ export default function Connexion({ navigation }) {
       .catch((error) => console.log('Notre erreur ', error));
   }
 
-  React.useEffect(() => {
-    setInterval(() => {
-    setSpinner(true) 
-    }, 3000);
-    })
+ 
+  const Loader = <OrientationLoadingOverlay
+  visible={Spinner}
+  color="white"
+  indicatorSize="large"
+  messageFontSize={10}
+  message="Veillez patienter un moment!!"
+/>
   return (
     <ScrollView>
       <View style={styles.container}>
-      
+      {Loader}
         <Image
           style={styles.images}
           source={require('../../assets/icon.png')}
@@ -76,7 +83,7 @@ export default function Connexion({ navigation }) {
           <TextInput
             secureTextEntry={checkPassword}
             style={styles.textInput2}
-            placeholder="Mot de passe"
+            placeholder="Mot de passed"
             onChangeText={(UserPsw) => setUserPsw(UserPsw)}
           />
           {checkPassword ? (
@@ -103,7 +110,7 @@ export default function Connexion({ navigation }) {
         <TouchableOpacity
           onPress={() => SendData()}
           style={[styles.btnLogin, styles.row, styles.justifyCenter]}>
-          <Text style={[{ color: 'white' }]}>Connexion</Text>
+          <Text style={[{ color: 'white' }]}>Connexions</Text>
         </TouchableOpacity>
         <Text style={[styles.color2Text, styles.bold, { marginBottom: '5%' }]}>
           Mot de passe oublié ?

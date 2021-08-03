@@ -6185,6 +6185,11 @@ react-native-loading-spinner-overlay@^2.0.0:
   dependencies:
     prop-types "^15.6.2"
 
+react-native-orientation-loading-overlay@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/react-native-orientation-loading-overlay/-/react-native-orientation-loading-overlay-0.1.6.tgz#fe8900828c28aa786c822dadf6fe55401f59da8e"
+  integrity sha512-SbsBFnZIejF/zZy3nL2vmmZkUovQ9ed28b6p2x8ZhAYoseHyO3dS0iahhPu1eSneGE2+XVw+zoKHmxOmVFmKXw==
+
 react-native-paper@3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-3.6.0.tgz#9f8452387bc6e6dae84db90c9c4715af5c7bd142"

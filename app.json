@@ -12,13 +12,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sara2106.snack2f928f40e3174f66b25748088b17275e"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.sara2106.snack2f928f40e3174f66b25748088b17275e"
     },
     "web": {
       "favicon": "./assets/favicon.png"

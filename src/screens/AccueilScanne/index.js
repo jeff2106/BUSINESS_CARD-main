@@ -22,8 +22,10 @@ import {
   TransitioningView,
 } from 'react-native-reanimated';
 import { CarteForme } from '../../components/carteForme';
+import { Ionicons, AntDesign, Foundation } from '@expo/vector-icons';
 
-export default function AccueilScanne({ route, navigation }) {
+
+export default  function AccueilScanne({ route, navigation }) {
   const { id, Token } = route.params;
   const [SecondData, setSecondData] = React.useState();
   const [DataHistorique, setDataHistorique] = React.useState();
@@ -31,6 +33,26 @@ export default function AccueilScanne({ route, navigation }) {
   const [Favoris, setFavoris] = React.useState(false);
   const [Agenda, setAgenda] = React.useState(false);
   const [Home, setHome] = React.useState(true);
+  
+  React.useEffect( () => {
+    // Update the document title using the browser API
+
+    var myHeaders = new Headers();
+    myHeaders.append('Authorization', 'Bearer 58|8CiW6XY1GSSvwuyRIxd7maWnMr7L2R5ubnic81yq');
+
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+    fetch(
+      'https://agnesmere-sarl.com/carte_visite/api/user/'+id+'',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then( (result) => setSecondData(result))
+      .catch((error) => console.log('error', error));
+  });
 
   //HISTORIQUE
   function ShowDataHistorique(){
@@ -58,7 +80,7 @@ export default function AccueilScanne({ route, navigation }) {
   
   React.useEffect(() => {
     ShowDataHistorique();
-  },[])
+  })
   
  const Historique = <View>
           <Text style={{ fontSize: 16, margin: 10}}>
@@ -142,30 +164,14 @@ export default function AccueilScanne({ route, navigation }) {
                       </Text>
                     </View>
                 </View>
-  
-  React.useEffect(() => {
-    // Update the document title using the browser API
 
-    var myHeaders = new Headers();
-    myHeaders.append('Authorization', 'Bearer ' + Token + '');
-
-    var requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow',
-    };
-    fetch(
-      'https://agnesmere-sarl.com/carte_visite/api/user/'+id+'',
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => setSecondData(result))
-      .catch((error) => console.log('errordd', error));
-  });
+ 
   
 //END
+//CARTE//
 
-  return (
+//END
+  return  (
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 0.4 }}>
         <View style={styles.header}>
@@ -264,9 +270,12 @@ export default function AccueilScanne({ route, navigation }) {
               borderRadius: 50,
               justifyContent: 'center',
             }}
-            onPress={() => {var myHeaders = new Headers();
+            onPress={() => {
+              setHistoriqueS(!HistoriqueS)
+              setHome(!Home)
+              var myHeaders = new Headers();
               myHeaders.append("Accept", "application/json");
-              myHeaders.append('Authorization', 'Bearer 58|8CiW6XY1GSSvwuyRIxd7maWnMr7L2R5ubnic81yq');
+              myHeaders.append('Authorization','Bearer 58|8CiW6XY1GSSvwuyRIxd7maWnMr7L2R5ubnic81yq');
               
               var requestOptions = {
                 method: 'GET',
@@ -276,11 +285,9 @@ export default function AccueilScanne({ route, navigation }) {
               
               fetch("https://agnesmere-sarl.com/carte_visite/api/card/show_scanned_card/"+id+"", requestOptions)
                 .then(response => response.json())
-                .then(result => setDataHistorique(result))
-                .catch(error => console.log('error', error));
-              console.log(DataHistorique);
-              setHistoriqueS(!HistoriqueS)
-              setHome(!Home)
+                .then(result => setDataHistorique(result.data))
+                .catch(error => console.log('error', error))
+                console.log("ok"+DataHistorique);
             }}
                 
             >
@@ -371,17 +378,18 @@ export default function AccueilScanne({ route, navigation }) {
         {/* Toutes les cartes */}
        
       </View>
-
-
-        </View>
-      </View>
-
       <View style={{ flex: 1 }}>
-          {Home ==  true ? Accueil : <Text></Text> }
+          {Home ==  true ?
+             Accueil 
+           : <Text>OK</Text> }
           {HistoriqueS ==  true ? Historique : <Text></Text>}
           
       </View>
+    </View>
+      </View>
+
+      
       <BottomBar id={id} Token={Token} Data={SecondData} />
     </SafeAreaView>
-  );
+  )
 }

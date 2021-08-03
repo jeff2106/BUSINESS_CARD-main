@@ -169,7 +169,101 @@ export default  function AccueilScanne({ route, navigation }) {
   
 //END
 //CARTE//
-
+const Card = (
+  <View style={{ marginTop: 20 }}>
+    <View style={styles.cardCentral}>
+      <View style={styles.headers}>
+        <View
+          style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
+          <View style={styles.cardPhoto}>
+            
+              <Image
+                source={require('../../assets/id.jpg')}
+                style={{ width: 74, height: 74, borderRadius: 10 }}
+              />
+            
+          </View>
+          <View style={{ marginRight: -20 }}>
+            <Text style={{ fontWeight: 'bold', letterSpacing: 2 }}>
+              Name
+            </Text>
+            <Text style={{ textAlign: 'center', opacity: 0.5 }}>
+              Job Position
+            </Text>
+          </View>
+          <View style={[styles.cardPhoto]}>
+            {/* <FontAwesome5 name="user-alt" size={24} color="grey" /> */}
+            <Image
+              style={[styles.ImageQr, { height: '100%', width: '100%' }]}
+              source={require('../../assets/id.jpg')}
+            />
+          </View>
+        </View>
+        <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+          <TouchableOpacity>
+            <Foundation
+              name="telephone"
+              size={18}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons
+              name="mail"
+              size={18}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <AntDesign
+              name="linkedin-square"
+              size={18}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <AntDesign
+              name="facebook-square"
+              size={18}
+              color="black"
+              style={{ marginLeft: 10 }}
+            />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            margin: 5,
+          }}>
+          <View style={{ flexDirection: 'row' }}>
+            <Ionicons name="location-sharp" size={18} color="black" />
+            <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+              Address
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Foundation name="web" size={18} color="black" />
+            <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+              www.Nope
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.footer}>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={{ marginRight: 10, color: 'white', marginTop: 3 }}>
+            Entreprise Name
+          </Text>
+          <AntDesign name="chrome" size={24} color="white" />
+        </View>
+      </View>
+    </View>
+  </View>
+);
 //END
   return  (
     <SafeAreaView style={styles.container}>
@@ -379,9 +473,12 @@ export default  function AccueilScanne({ route, navigation }) {
        
       </View>
       <View style={{ flex: 1 }}>
-          {Home ==  true ?
+          {Home ==  true ? 
+          SecondData != null ?
+          Card :
              Accueil 
-           : <Text>OK</Text> }
+          
+           : <Text></Text> }
           {HistoriqueS ==  true ? Historique : <Text></Text>}
           
       </View>

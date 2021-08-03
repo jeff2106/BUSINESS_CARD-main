@@ -92,6 +92,7 @@ export default function Inscription({ navigation }) {
   return (
     <ScrollView>
       <View style={styles.container}>
+        {Loader}
         <Image
           style={styles.images}
           source={require('../../assets/logo.png')}

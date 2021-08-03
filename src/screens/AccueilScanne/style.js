@@ -72,11 +72,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     elevation: 5
   },
-  // Footer
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

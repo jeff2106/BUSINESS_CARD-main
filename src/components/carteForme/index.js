@@ -28,7 +28,7 @@ export const CarteForme = (props,{
 }) => {
   const navigation = useNavigation();
   const RenderButtonDelete = () => {
-    console.log(props.id_user_card,props.id_scanneur);
+    
     return (
       <TouchableOpacity
         onPress={() => {
@@ -123,10 +123,10 @@ export const CarteForme = (props,{
                   fontWeight: 'bold',
                   fontSize: 18
                 }}>
-                {props.user_job_position}
+                {props.name_proprietaire} 
               </Text>
             </View>
-            <Text>{props.adresse_proprietaire}</Text>
+            <Text>{props.user_job_position} </Text>
           </View>
         </View>
         <View

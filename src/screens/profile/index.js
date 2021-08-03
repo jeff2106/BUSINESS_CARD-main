@@ -430,7 +430,13 @@ export default function Profile({ route, navigation }) {
       <View style={styles.header}>
         <TouchableHighlight
           underlayColor="transparent"
-          onPress={() => navigation.goBack()}>
+          onPress={() => {
+            /* 1. Navigate to the Details route with params */
+            navigation.navigate('AccueilScanne', {
+              id: id,
+              Token: Token
+            });
+          }}>
           <View style={{ flexDirection: 'row' }}>
             <Icon name="arrow-left" size={30} color="#DA7200" pack="material" />
             <View style={{ justifyContent: 'center' }}>

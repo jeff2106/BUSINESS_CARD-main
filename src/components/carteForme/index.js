@@ -32,22 +32,21 @@ export const CarteForme = (props,{
     return (
       <TouchableOpacity
         onPress={() => {
-          var myHeaders = new Headers();
+            var myHeaders = new Headers();
             myHeaders.append("Accept", "application/json");
-            myHeaders.append("Authorization", 'Bearer 58|8CiW6XY1GSSvwuyRIxd7maWnMr7L2R5ubnic81yq');
+            myHeaders.append("Authorization", "Bearer 187|jzylBk4hcSL9fy2Ay5mn880nX4EklIUKUcIQmhUb");
             myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
+            
             var urlencoded = new URLSearchParams();
-            urlencoded.append("id_carte_proprietaire", props.id_user_card);
-
+            
             var requestOptions = {
               method: 'DELETE',
               headers: myHeaders,
               body: urlencoded,
               redirect: 'follow'
             };
-
-            fetch("https://agnesmere-sarl.com/carte_visite/api/card/delete_scanned_card/"+props.id_scanneur+"", requestOptions)
+            
+            fetch("https://agnesmere-sarl.com/carte_visite/api/card/delete_scanned_card/"+props.id_scanneur+"/"+props.id_user_card+"", requestOptions)
               .then(response => response.json())
               .then(result => console.log(result))
               .catch(error => console.log('error', error));

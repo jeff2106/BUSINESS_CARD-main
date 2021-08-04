@@ -15,6 +15,8 @@ import { Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import localStorage from 'react-native-sync-localstorage';
 import { clearStorage, getStorage, setStorage } from 'react-native-storer';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
+import * as Facebook from 'expo-facebook';
+import * as Google from 'expo-google-app-auth';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -67,8 +69,8 @@ export default function Inscription({ navigation }) {
                 Token: result.token,
               });
               setSpinner(false);
-              console.log("Notre Token "+Token);
-            }else {
+              console.log('Notre Token ' + Token);
+            } else {
               setSpinner(false);
               alert('Vous avez mal saisie une donnée');
             }
@@ -82,13 +84,120 @@ export default function Inscription({ navigation }) {
       alert('Les champs doivent etre renseigner');
     }
   };
-  const Loader = <OrientationLoadingOverlay
-  visible={Spinner}
-  color="white"
-  indicatorSize="large"
-  messageFontSize={10}
-  message="Veillez patienter un moment!!"
-/>
+
+  const [googleSubmitting, setGoogleSubmitting] = React.useState(false);
+  const [responseJSONs, setresponseJSONs] = React.useState(null);
+  //Connexion avec facebook
+  async function logInFB() {
+    try {
+      await Facebook.initializeAsync({
+        appId: '857776271524158',
+      });
+      const {
+        type,
+        token,
+        expirationDate,
+        permissions,
+        declinedPermissions,
+      } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ['public_profile', 'email', 'user_friends'],
+      });
+      if (type === 'success') {
+        // Get the user's name using Facebook's Graph API
+        const response = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}`
+        )
+          .then((responses) => responses.json())
+          .then((results) => {
+            var myHeaders = new Headers();
+            myHeaders.append('Accept', 'application/json');
+
+            var formdata = new FormData();
+            formdata.append('is_log_with_facebook', 1);
+            formdata.append('user_fb_name',results.name);
+            formdata.append('user_fb_account_id', results.id);
+
+            var requestOptions = {
+              method: 'POST',
+              headers: myHeaders,
+              body: formdata,
+              redirect: 'follow',
+            };
+
+            console.log(formdata);
+
+            setSpinner(!Spinner);
+            fetch(
+              'https://agnesmere-sarl.com/carte_visite/api/register',
+              requestOptions
+            )
+              .then((response) => response.json())
+              .then((result) => {
+                console.log(result);
+                setSpinner(!Spinner);
+                if (!result.message) {
+                  setSpinner(false);
+                  console.log(result);
+                  navigation.navigate('AccueilScanne', {
+                    id: result.user.id,
+                    Token: result.token,
+                  });
+                  setSpinner(false);
+                } else {
+                  setSpinner(false);
+                  alert('Vous avez mal saisie une donnée');
+                }
+              })
+              .catch((error) => console.log('error', error));
+          })
+          .catch((error) => console.log('Notre erreur ', error));
+      } else {
+        // type === 'cancel'
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
+  }
+  const handleMessage = (message, type = 'FAILED') => {
+    setMessage(message);
+    setMessageType(type);
+  };
+
+  // connexion google
+  const loginGoogle = () => {
+    setGoogleSubmitting(true);
+    const config = {
+      androidClientId:
+        '150680783491-dlpm321mfh8l6eg09ov4lg1buch1oa7u.apps.googleusercontent.com',
+      iosClientId:
+        '150680783491-il7jas27b8bhbmruk1pacte5qr1vimum.apps.googleusercontent.com',
+      scopes: ['profile', 'email'],
+    };
+    Google.logInAsync(config)
+      .then((result) => {
+        const { type, user } = result;
+        console.log(result.user);
+        if (type == 'success') {
+          const { email, name, photoUrl } = user;
+        } else {
+          handleMessage('Google signin was cancelled');
+        }
+        setGoogleSubmitting(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const Loader = (
+    <OrientationLoadingOverlay
+      visible={Spinner}
+      color="white"
+      indicatorSize="large"
+      messageFontSize={10}
+      message="Veillez patienter un moment!!"
+    />
+  );
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -182,13 +291,14 @@ export default function Inscription({ navigation }) {
 
         <TouchableOpacity
           style={[styles.btnSocialG, styles.row, styles.justifyCenter]}
-          onPress={() => DisplayData()}>
+          onPress={loginGoogle}>
           <Text style={{ color: 'white', marginRight: 10 }}>
             S'Inscription avec Email
           </Text>
           <AntDesign name="google" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
+          onPress={logInFB}
           style={[styles.btnSocialF, styles.row, styles.justifyCenter]}>
           <Text style={{ color: 'white', marginRight: 10 }}>
             S'Inscription avec Facebook

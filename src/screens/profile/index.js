@@ -16,6 +16,7 @@ import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons, AntDesign, Foundation } from '@expo/vector-icons';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
+import ImageModal from 'react-native-image-modal';
 
 export default function Profile({ route, navigation }) {
   useEffect(() => {
@@ -550,7 +551,7 @@ export default function Profile({ route, navigation }) {
             'https://agnesmere-sarl.com/carte_visite/api/logout',
             requestOptions
           )
-            .then((response) => response.text())
+            .then((response) => response.json())
             .then((result) => {
               if(result){
                 Loader = <OrientationLoadingOverlay

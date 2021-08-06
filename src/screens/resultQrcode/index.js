@@ -106,15 +106,14 @@ export default function ResultQrcode({ navigation, route }) {
                 var myHeaders = new Headers();
                 myHeaders.append("Accept", "application/json");
                 myHeaders.append('Authorization', 'Bearer ' + Token + '');
-                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 
-                var urlencoded = new URLSearchParams();
-                urlencoded.append("id_user_de_card",idCartScaner);
+                var formdata = new FormData();
+                formdata.append("id_user_de_card",idCartScaner);
                 
                 var requestOptions = {
                   method: 'DELETE',
                   headers: myHeaders,
-                  body: urlencoded,
+                  body: formdata,
                   redirect: 'follow'
                 };
                 
@@ -134,18 +133,17 @@ export default function ResultQrcode({ navigation, route }) {
               
               var myHeaders = new Headers();
               myHeaders.append('Accept', 'application/json');
-              myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
               myHeaders.append('Authorization', 'Bearer ' + Token + '');
           
-              var urlencoded = new URLSearchParams();
-              urlencoded.append('id_style_de_carte', 1);
-              urlencoded.append('id_user', id);
-              urlencoded.append("id_user_de_card", idCartScaner);
+              var formdata = new FormData();
+              formdata.append('id_style_de_carte', 1);
+              formdata.append('id_user', id);
+              formdata.append("id_user_de_card", idCartScaner);
           
               var requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
-                body: urlencoded,
+                body: formdata,
                 redirect: 'follow',
               };
           

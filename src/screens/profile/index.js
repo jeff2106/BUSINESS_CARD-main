@@ -535,33 +535,7 @@ export default function Profile({ route, navigation }) {
             underlayColor="transparent"
             onPress=
         {() => {
-          var myHeaders = new Headers();
-          myHeaders.append(
-            'Authorization',
-            'Bearer '+Token+''
-          );
-
-          var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            redirect: 'follow',
-          };
-          setSpinner(!Spinner);
-          fetch(
-            'https://agnesmere-sarl.com/carte_visite/api/logout',
-            requestOptions
-          )
-            .then((response) => response.json())
-            .then((result) => {
-              if(result){
-                Loader = <OrientationLoadingOverlay
-               visible={false}
-               color="white"
-               indicatorSize="large"
-               messageFontSize={10}
-               message="Veillez patienter un moment!!"
-             />
-             }else{
+      
                 Loader = <OrientationLoadingOverlay
                visible={true}
                color="white"
@@ -569,13 +543,18 @@ export default function Profile({ route, navigation }) {
                messageFontSize={10}
                message="Veillez patienter un moment!!"
              />
-             }
               alert("Vous etes maintenant deconnecter");
               navigation.navigate('Connexion');
-            })
-            .catch((error) => console.log('error', error));
-        }}>
-          
+              Loader = <OrientationLoadingOverlay
+               visible={false}
+               color="white"
+               indicatorSize="large"
+               messageFontSize={10}
+               message="Veillez patienter un moment!!"
+             />
+            }
+        }>
+
             <View
               style={{
                 backgroundColor: '#FAE7D3',

@@ -13,6 +13,7 @@ import { Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 import ImageView from "react-native-image-viewing";
 import * as Facebook from "expo-facebook";
+import * as Google from 'expo-google-app-auth';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -39,14 +40,16 @@ export default function Connexion({ navigation }) {
     myHeaders.append('Accept', 'application/json');
 
     var formdata = new FormData();
-    formdata.append('email', UserMail);
-    formdata.append('password', UserPsw);
+    formdata.append("email", UserMail);
+    formdata.append("password", UserPsw);
+    formdata.append("is_login_with_social_network", 0);
+    formdata.append("account_id", null);
 
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: formdata,
-      redirect: 'follow',
+      redirect: 'follow'
     };
     setSpinner(!Spinner);
     fetch('https://agnesmere-sarl.com/carte_visite/api/login', requestOptions)
@@ -86,19 +89,20 @@ export default function Connexion({ navigation }) {
           `https://graph.facebook.com/me?access_token=${token}`
         );
         var myHeaders = new Headers();
-        myHeaders.append('Accept', 'application/json');
+        myHeaders.append("Accept", "application/json");
+        var formdata = new FormData();
 
-          var formdata = new FormData();
-          formdata.append("is_log_with_facebook", 1);
-          formdata.append("user_fb_name", `${(await response.json()).name}`);
-          formdata.append('user_fb_account_id', `${(await response.json()).id}`);
+        formdata.append("email", null);
+        formdata.append("password", null);
+        formdata.append("is_login_with_social_network", 1);
+        formdata.append("account_id", `${(await response.json()).id}`);
 
-          var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: formdata,
-            redirect: 'follow',
-          };
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: formdata,
+          redirect: 'follow'
+        };
           setSpinner(!Spinner);
           fetch('https://agnesmere-sarl.com/carte_visite/api/login', requestOptions)
             .then((responses) => responses.json())
@@ -130,7 +134,70 @@ export default function Connexion({ navigation }) {
     }
   
   }
+  const handleMessage = (message, type = 'FAILED') => {
+    setMessage(message);
+    setMessageType(type);
+  };
+  const [googleSubmitting, setGoogleSubmitting] = React.useState(false);
+// connexion google
+const loginGoogle = () => {
+  setGoogleSubmitting(true);
+  const config = {
+    androidClientId:
+      '150680783491-dlpm321mfh8l6eg09ov4lg1buch1oa7u.apps.googleusercontent.com',
+    iosClientId:
+      '150680783491-il7jas27b8bhbmruk1pacte5qr1vimum.apps.googleusercontent.com',
+    scopes: ['profile', 'email'],
+  };
+  Google.logInAsync(config)
+    .then((result) => {
+      const { type, user } = result;
+      console.log(result.user.id);
+      if (type == 'success') {
+        const { email, name, photoUrl } = user;
+        var myHeaders = new Headers();
+        myHeaders.append("Accept", "application/json");
+        var formdata = new FormData();
+        formdata.append("email", null);
+        formdata.append("password", null);
+        formdata.append("is_login_with_social_network", 1);
+        formdata.append("account_id", result.user.id);
 
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: formdata,
+          redirect: 'follow'
+        };
+        fetch("https://agnesmere-sarl.com/carte_visite/api/login", requestOptions)
+          .then(response => response.json())
+          
+          .then((result) => {
+            setSpinner(!Spinner);
+            console.log(result);
+            if (!result.message) {
+              setSpinner(false);
+              console.log(result);
+              navigation.navigate('AccueilScanne', {
+                id: result.user.id,
+                Token: result.token,
+              });
+              setSpinner(false);
+            } else {
+              setSpinner(false);
+              alert('Vous avez mal saisie une donnée');
+            }
+      })
+          .catch(error => console.log('error', error));
+      } else {
+        Alert.alert("INFOS",'Connexion avec google a été interrompu');
+      }
+      setGoogleSubmitting(false);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 
   const Loader = <OrientationLoadingOverlay
@@ -203,7 +270,7 @@ export default function Connexion({ navigation }) {
           onRequestClose={() => setIsVisible(false)}
         />
         <TouchableOpacity
-          onPress={() => navigation.navigate('Agendas')}
+          onPress={loginGoogle}
           style={[styles.btnSocialG, styles.row, styles.justifyCenter]}>
           <Text style={{ color: 'white', marginRight: 10 }}>
             Se connecter avec Email

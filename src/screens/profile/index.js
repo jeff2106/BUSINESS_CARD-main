@@ -346,7 +346,7 @@ export default function Profile({ route, navigation }) {
                 />
               )}
             </View>
-            <View style={{ marginRight: -20 }}>
+            <View style={{ marginRight: -20,width:140 }}>
               <Text style={{ fontWeight: 'bold', letterSpacing: 2 }}>
                 {Data.data.name}
               </Text>

@@ -86,7 +86,6 @@ export default function Inscription({ navigation }) {
   };
 
   const [googleSubmitting, setGoogleSubmitting] = React.useState(false);
-  const [responseJSONs, setresponseJSONs] = React.useState(null);
   //Connexion avec facebook
   async function logInFB() {
     try {
@@ -113,9 +112,14 @@ export default function Inscription({ navigation }) {
             myHeaders.append('Accept', 'application/json');
 
             var formdata = new FormData();
-            formdata.append('is_log_with_facebook', 1);
-            formdata.append('user_fb_name',results.name);
-            formdata.append('user_fb_account_id', results.id);
+            formdata .append("email", null);
+            formdata .append("phone_number", "");
+            formdata .append("password", "");
+            formdata .append("password_confirmation", "");
+            formdata .append("is_log_with_social_network", 1);
+            formdata .append("social_network_name", results.name);
+            formdata .append("social_network_account_id", results.id);
+            formdata .append("social_picture", null);
 
             var requestOptions = {
               method: 'POST',
@@ -124,7 +128,6 @@ export default function Inscription({ navigation }) {
               redirect: 'follow',
             };
 
-            console.log(formdata);
 
             setSpinner(!Spinner);
             fetch(
@@ -176,11 +179,48 @@ export default function Inscription({ navigation }) {
     Google.logInAsync(config)
       .then((result) => {
         const { type, user } = result;
-        console.log(result.user);
+        console.log(result.user.name);
         if (type == 'success') {
           const { email, name, photoUrl } = user;
+          var myHeaders = new Headers();
+          myHeaders.append("Accept", "application/json");
+          var formdata = new FormData();
+          formdata .append("email", result.user.email);
+          formdata .append("phone_number", "");
+          formdata .append("password", "");
+          formdata .append("password_confirmation", "");
+          formdata .append("is_log_with_social_network", 1);
+          formdata .append("social_network_name", result.user.name);
+          formdata .append("social_network_account_id", result.user.id);
+          formdata .append("social_picture", result.user.photoUrl);
+
+          var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: formdata,
+            redirect: 'follow'
+          };
+
+          fetch("https://agnesmere-sarl.com/carte_visite/api/register", requestOptions)
+            .then(response => response.json())
+            .then((result) => {
+              setSpinner(!Spinner);
+              if (!result.message) {
+                setSpinner(false);
+                console.log(result);
+                navigation.navigate('AccueilScanne', {
+                  id: result.user.id,
+                  Token: result.token,
+                });
+                setSpinner(false);
+              } else {
+                setSpinner(false);
+                alert('Vous avez mal saisie une donnée');
+              }
+        })
+            .catch(error => console.log('error', error));
         } else {
-          handleMessage('Google signin was cancelled');
+          Alert.alert("INFOS",'Connexion avec google a été interrompu');
         }
         setGoogleSubmitting(false);
       })

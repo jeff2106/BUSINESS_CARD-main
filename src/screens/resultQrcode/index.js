@@ -194,7 +194,7 @@ export default function ResultQrcode({ navigation, route }) {
                 />
               )}
             </View>
-            <View style={{ marginRight: -20 }}>
+            <View style={{ marginRight: -20,width:140 }}>
               <Text style={{ fontWeight: 'bold' }}>
                 {DetailsUserScanner.data.name}
               </Text>

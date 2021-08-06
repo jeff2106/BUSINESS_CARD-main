@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeout from 'react-native-swipeout';
 import {useNavigation} from '@react-navigation/native';
 
-export const CarteForme = (props,{
+export const CarteFormeFav = (props,{
   name_proprietaire,
   adresse_proprietaire,
   entreprise_name,
@@ -32,20 +32,16 @@ export const CarteForme = (props,{
     return (
       <TouchableOpacity
         onPress={() => {
-            var myHeaders = new Headers();
+          var myHeaders = new Headers();
             myHeaders.append("Accept", "application/json");
-            
-            var formdata = new FormData();
-            
-            
+
             var requestOptions = {
               method: 'DELETE',
               headers: myHeaders,
-              body: formdata,
               redirect: 'follow'
             };
-            
-            fetch("https://agnesmere-sarl.com/carte_visite/api/card/delete_scanned_card/"+props.id_scanneur+"/"+props.id_user_card+"", requestOptions)
+
+            fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+props.id_scanneur+"/"+props.id_user_card+"", requestOptions)
               .then(response => response.json())
               .then(result => {
                 console.log(result);

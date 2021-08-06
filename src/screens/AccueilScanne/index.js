@@ -23,6 +23,7 @@ import {
   TransitioningView,
 } from 'react-native-reanimated';
 import { CarteForme } from '../../components/carteForme';
+import { CarteFormeFav } from '../../components/carteFormeF';
 import { Ionicons, AntDesign, Foundation } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
@@ -33,6 +34,7 @@ export default function AccueilScanne({ route, navigation }) {
   const { id, Token } = route.params;
   const [SecondData, setSecondData] = React.useState();
   const [DataHistorique, setDataHistorique] = React.useState([]);
+  const [DataFav, setDataFav] = React.useState([]);
   const [HistoriqueS, setHistoriqueS] = React.useState(false);
   const [Favoris, setFavoris] = React.useState(false);
   const [Agenda, setAgenda] = React.useState(false);
@@ -56,8 +58,8 @@ export default function AccueilScanne({ route, navigation }) {
       .then((response) => response.json())
       .then((result) => setSecondData(result))
       .catch((error) => console.log('error user', error));
-  });
-  
+  },[]);
+
   //HISTORIQUE
   function ShowDataHistorique() {
     var myHeaders = new Headers();
@@ -88,7 +90,7 @@ export default function AccueilScanne({ route, navigation }) {
 
   React.useEffect(() => {
     ShowDataHistorique();
-  }, []);
+  },[]);
 
   const Historique = (
     <View>
@@ -113,6 +115,7 @@ export default function AccueilScanne({ route, navigation }) {
               id_scanneur={item.id_scanneur}
               adresse_proprietaire={item.adresse_proprietaire}
               Token={Token}
+              onPress={onPress}
             />
           )}
         />
@@ -145,6 +148,67 @@ export default function AccueilScanne({ route, navigation }) {
       />
     </View>
   );
+  //FAVORIS
+  function ShowDataFavoris() {
+  
+      var myHeaders = new Headers();
+      myHeaders.append("Accept", "application/json");
+      
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+      
+      fetch("https://agnesmere-sarl.com/carte_visite/api/card/show_user_card_in_favoris/"+
+      id +"", requestOptions)
+        .then(response => response.json())
+        .then(result => setDataFav(result))
+        .catch(error => console.log('error', error));
+  }
+
+  const transitionRefs = React.useRef();
+  const transitions = <Transition.Change interpolation="easeInOut" />;
+  const onPressFav = () => {
+    transitionRefs.current.animateNextTransition();
+  };
+
+  React.useEffect(() => {
+    ShowDataFavoris();
+  },[]);
+
+  const FavorisCard = (
+    <View>
+      <Text style={{ fontSize: 16, margin: 10 }}>Carte en Favoris</Text>
+      <Transitioning.View ref={transitionRefs} transition={transitions}>
+        <FlatList
+          style={{ marginBottom: 370 }}
+          data={DataFav?.data}
+          keyExtractor={(item) => item.user_id}
+          renderItem={({ item }) => (
+            <CarteFormeFav
+              Data={item}
+              name_proprietaire={item.name_proprietaire}
+              adresse_proprietaire={item.title}
+              entreprise_name={item.card_informations.entreprise_name}
+              photo_proprietaire={item.photo_proprietaire}
+              user_job_position={item.card_informations.user_job_position}
+              entreprise_website={item.card_informations.entreprise_website}
+              email_proprietaire={item.email_proprietaire}
+              card_qrcode={item.card_informations.card_qrcode}
+              id_user_card={item.id_proprietaire_card}
+              id_scanneur={item.id_scanneur}
+              adresse_proprietaire={item.adresse_proprietaire}
+              Token={Token}
+              onPress={onPress}
+            />
+          )}
+        />
+      </Transitioning.View>
+    </View>
+  );
+
+ 
   //ACCUEILL
   const Accueil = (
     <View style={{ flex: 1 }}>
@@ -201,7 +265,7 @@ export default function AccueilScanne({ route, navigation }) {
                 />
               )}
             </View>
-            <View style={{ marginRight: -20 }}>
+            <View style={{ marginRight: -20,width:140 }}>
               <Text style={{ fontWeight: 'bold', letterSpacing: 2 }}>
                 {SecondData?.data.name}
               </Text>
@@ -352,8 +416,9 @@ if(SecondData?.data){
                     justifyContent: 'center',
                   }}
                   onPress={() => {
-                    setHistoriqueS(!HistoriqueS);
-                    setHome(!Home);
+                    setFavoris(false);
+                    setHome(true);
+                    setHistoriqueS(false);
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -384,8 +449,9 @@ if(SecondData?.data){
                     justifyContent: 'center',
                   }}
                   onPress={() => {
-                    setHistoriqueS(!HistoriqueS);
-                    setHome(!Home);
+                    setFavoris(false);
+                    setHome(true);
+                    setHistoriqueS(false);
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -419,8 +485,9 @@ if(SecondData?.data){
                     justifyContent: 'center',
                   }}
                   onPress={() => {
-                    setHistoriqueS(!HistoriqueS);
-                    setHome(!Home);
+                    setFavoris(false);
+                    setHome(true);
+                    setHistoriqueS(false);
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -451,9 +518,9 @@ if(SecondData?.data){
                     justifyContent: 'center',
                   }}
                   onPress={() => {
-                    console.log(id);
-                    setHistoriqueS(!HistoriqueS);
-                    setHome(!Home);
+                    setFavoris(false);
+                    setHome(false);
+                    setHistoriqueS(true);
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -475,17 +542,57 @@ if(SecondData?.data){
               </View>
             )}
             {/* Favoris */}
-            <View style={{ margin: 10 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#CFCFCF',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50,
-                  justifyContent: 'center',
-                }}
-                onPress={() => navigation.navigate('AjoutRecent')}>
-                <Icon
+            {Favoris == true ? (
+              <View style={{ margin: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#DA7200',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    setFavoris(false);
+                    setHome(true);
+                    setHistoriqueS(false);
+        
+                  }}>
+                  <Icon
+                  style={{ alignSelf: 'center' }}
+                  name="star"
+                  pack="material"
+                  size={30}
+                  color={'#fff'}
+                />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    color: '#DA7200',
+                    fontSize: 11,
+                    marginHorizontal: 5,
+                    textAlign: 'center',
+                  }}>
+                  Favoris
+                </Text>
+              </View>
+            ) : (
+              <View style={{ margin: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#CFCFCF',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    setFavoris(true);
+                    setHome(false);
+                    setHistoriqueS(false);
+        
+                  }}>
+                  <Icon
                   style={{ alignSelf: 'center' }}
                   name="star"
                   pack="material"
@@ -502,7 +609,8 @@ if(SecondData?.data){
                 }}>
                 Favoris
               </Text>
-            </View>
+              </View>
+            )}
             {/* Agenda de rappel  */}
             <View style={{ margin: 10 }}>
               <TouchableOpacity
@@ -560,14 +668,25 @@ if(SecondData?.data){
                     height: windowHeight,
                   },
                 ]}>
-                {HistoriqueS && DataHistorique?.data.length > 0 && Historique}
-                {HistoriqueS && DataHistorique?.data.length < 0 && (
+            {HistoriqueS && DataHistorique?.data?.length > 0 && Historique}
+            {HistoriqueS && DataHistorique?.data?.length < 0 && (
                   <View
                     style={[
                       styles.cardCentral,
                       { backgroundColor: null, borderRadius: null },
                     ]}>
                     <Text>Aucun Historique</Text>
+                  </View>
+                )}
+                
+            {Favoris && DataFav?.data?.length > 0 && FavorisCard}
+            {Favoris && DataFav?.data?.length < 0 && (
+                  <View
+                    style={[
+                      styles.cardCentral,
+                      { backgroundColor: null, borderRadius: null },
+                    ]}>
+                    <Text>Aucune Carte en favoris</Text>
                   </View>
                 )}
               </View>
@@ -580,3 +699,4 @@ if(SecondData?.data){
     </SafeAreaView>
   );
 }
+

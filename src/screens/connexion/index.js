@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Alert
 } from 'react-native';
 import { Feather, FontAwesome5, AntDesign } from '@expo/vector-icons';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
@@ -67,7 +68,7 @@ export default function Connexion({ navigation }) {
           console.log("Notre Token "+Token);
         }else {
           setSpinner(false);
-          alert('Vous avez mal saisie une donnée');
+          Alert.alert("Alert Connexion ",'Vous avez mal saisie une donnée ou votre compte existe pas');
         }
         console.log('Patience');
       })

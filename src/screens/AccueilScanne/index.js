@@ -97,6 +97,7 @@ export default function AccueilScanne({ route, navigation }) {
       .then((response) => response.json())
       .then((result) => setDataHistorique(result))
       .catch((error) => console.log('error', error));
+      console.log(DataHistorique.data);
   }
 
   const transitionRef = React.useRef();

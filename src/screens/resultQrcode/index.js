@@ -32,37 +32,7 @@ export default function ResultQrcode({ navigation, route }) {
   const [activeVal, setActiveVal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   
-  function ScannerHistorique(){
-    var myHeaders = new Headers();
-    myHeaders.append('Accept', 'application/json');
-    myHeaders.append('Authorization', 'Bearer ' + Token + '');
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-
-    var urlencoded = new URLSearchParams();
-    urlencoded.append('id_card_scanned', idCartScaner);
-    urlencoded.append('id_scanneur', id);
-    urlencoded.append('id_style_de_carte', 1);
-
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: urlencoded,
-      redirect: 'follow',
-    };
-
-    fetch(
-      'https://agnesmere-sarl.com/carte_visite/api/card/store_scanned_card',
-      requestOptions
-    )
-      .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log('error', error));
-  }
-
-
-  React.useEffect(() => {
-    ScannerHistorique()
-  },[]);
+  
 
   function Favoris() {
     var myHeaders = new Headers();

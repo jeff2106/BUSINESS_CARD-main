@@ -575,6 +575,7 @@ export default function Profile({ route, navigation }) {
             })
             .catch((error) => console.log('error', error));
         }}>
+          
             <View
               style={{
                 backgroundColor: '#FAE7D3',

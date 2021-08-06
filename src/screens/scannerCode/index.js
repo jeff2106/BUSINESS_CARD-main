@@ -28,6 +28,29 @@ export default function ScannerCode({ navigation, route }) {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     console.log(data);
+    var myHeaders = new Headers();
+    myHeaders.append('Accept', 'application/json');
+    myHeaders.append('Authorization', 'Bearer ' + Token + '');
+
+    var formdata = new FormData();
+    formdata.append('id_card_scanned', data);
+    formdata.append('id_scanneur', id);
+    formdata.append('id_style_de_carte', 1);
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch(
+      'https://agnesmere-sarl.com/carte_visite/api/card/store_scanned_card',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .then((result) => console.log(result))
+      .catch((error) => console.log('error', error));
 
     var myHeaders = new Headers();
     myHeaders.append('Authorization', 'Bearer ' + Token + '');

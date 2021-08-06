@@ -27,9 +27,43 @@ import {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function WriteAgenda({ navigation }) {
+export default function WriteAgenda({ navigation ,route}) {
+  const { id, Token } = route.params;
+  
   const [activeVal, setActiveVal] = useState(false);
+  
+  const [title_agenda, settitle_agenda] = useState(false);
+  const [place_agenda, setplace_agenda] = useState(false);
+  const [start_date_agenda, setstart_date_agenda] = useState(false);
+  const [end_date_agenda, setend_date_agenda] = useState(false);
+  const [rappel_agenda, setrappel_agenda] = useState(false);
+  const [frequence_agenda, setfrequence_agenda] = useState(false);
+console.log(id);
+  function SendData(){
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
 
+    var formdata = new FormData();
+    formdata.append("id_user_agenda", id);
+    formdata.append("title_agenda", title_agenda);
+    formdata.append("place_agenda", place_agenda);
+    formdata.append("start_date_agenda", start_date_agenda);
+    formdata.append("end_date_agenda", end_date_agenda);
+    formdata.append("rappel_agenda", "Un jour avant");
+    formdata.append("frequence_agenda", "Chaque mois");
+
+    var requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow'
+    };
+
+    fetch("https://agnesmere-sarl.com/carte_visite/api/card/store_agenda", requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.headerBar}>
@@ -112,6 +146,7 @@ export default function WriteAgenda({ navigation }) {
           <TextInput
             style={[styles.shadow, { width: '80%' }]}
             placeholder="Ecrivez le nom de l'évènement ici..."
+            onChangeText={(title_agenda) => settitle_agenda(title_agenda)}
           />
         </View>
         <View
@@ -129,6 +164,7 @@ export default function WriteAgenda({ navigation }) {
           <TextInput
             style={[styles.shadow, { width: '80%' }]}
             placeholder="Ecrivez le lieu ici..."
+            onChangeText={(place_agenda) => setplace_agenda(place_agenda)}
           />
         </View>
         <View
@@ -182,10 +218,12 @@ export default function WriteAgenda({ navigation }) {
               <TextInput
                 style={[styles.shadow, { width: '40%', textAlign: 'center' }]}
                 placeholder="08:22"
+                onChangeText={(start_date_agenda) => setstart_date_agenda(start_date_agenda)}
               />
               <TextInput
                 style={[styles.shadow, { width: '40%', textAlign: 'center' }]}
                 placeholder="08:12"
+                onChangeText={(end_date_agenda) => setend_date_agenda(end_date_agenda)}
               />
             </View>
           </View>
@@ -218,7 +256,7 @@ export default function WriteAgenda({ navigation }) {
           
       </ScrollView>
       <TouchableOpacity
-        onPress={() => navigation.navigate('ProfilCreationCart')}
+        onPress={()=> SendData()}
         style={[styles.floatTouch, { height: 65, width: 65 }]}>
             <Feather name="check" size={24} color="white" />
       </TouchableOpacity>

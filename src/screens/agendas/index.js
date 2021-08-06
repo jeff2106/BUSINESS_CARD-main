@@ -28,7 +28,7 @@ import { Agenda } from 'react-native-calendars';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Agendas({ navigation }) {
+export default function Agendas(props) {
   const [items, setItems] = useState({});
 
   useEffect(() => {
@@ -37,6 +37,7 @@ export default function Agendas({ navigation }) {
       const response = await fetch(
         'https://jsonplaceholder.typicode.com/posts'
       );
+
       const data = await response.json();
       const mappedData = data.map((post, index) => {
         const date = addDays(new Date(), index);
@@ -57,73 +58,20 @@ export default function Agendas({ navigation }) {
   const renderItem = (item) => {
     return (
       <View style={styles.itemContainer}>
-        <Text>{item.name}dd</Text>
+        <Text>{item.id}dd</Text>
         <Text>{item.cookies ? `🍪` : `😋`}</Text>
       </View>
     );
   };
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.headerBar}>
-        <Image
-          style={styles.imagesIcon}
-          source={require('../../assets/iconBar.png')}
-        />
-        <View style={styles.rowacces}>
-          <FontAwesome name="user-circle" size={24} color="black" />
-          <Ionicons
-            style={{ marginLeft: 10 }}
-            name="md-settings-sharp"
-            size={24}
-            color="black"
-          />
-        </View>
-      </View>
-      <ScrollView>
-        <View
-          style={[
-            styles.row,
-            styles.justifyCenter,
-            styles.shadow,
-            { height: 45, marginTop: 20, alignSelf: 'center' },
-          ]}>
-          <TextInput
-            secureTextEntry={true}
-            style={styles.textInput2}
-            placeholder="Recherche"
-          />
-
-          <Feather name="search" size={18} color="#F07D00" />
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignContent: 'center',
-            justifyContent: 'center',
-          }}>
-          <TouchableOpacity style={styles.rond}>
-            <Ionicons name="home" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.rond}>
-            <MaterialIcons name="history" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.rond}>
-            <FontAwesome name="star" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.rond}>
-            <MaterialIcons name="access-alarm" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.rond}>
-            <Ionicons name="logo-bitbucket" size={24} color="black" />
-          </TouchableOpacity>
-        </View>
+      
         <Text style={{ fontSize: 15, fontWeight: 'bold', margin: 10 }}>
           Agenda de rappel
         </Text>
         <Agenda items={items} style={{ zIndex: 1 }} renderItem={renderItem} />
-      </ScrollView>
       <TouchableOpacity
-        onPress={() => navigation.navigate('WriteAgenda')}
+        onPress={props.onPress}
         style={[styles.floatTouch, { height: 65, width: 65 }]}>
         <AntDesign name="plus" size={24} color="white" />
       </TouchableOpacity>
@@ -154,11 +102,11 @@ const styles = StyleSheet.create({
   },
   floatTouch: {
     position: 'absolute',
-    bottom: '5%',
+    bottom: '60%',
     right: '5%',
     backgroundColor: '#DA7200',
-    height: '7%',
-    width: '12%',
+    height: '2%',
+    width: '10%',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,

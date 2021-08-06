@@ -300,6 +300,49 @@ export default StyleSheet.create({
     shadowRadius: 2.62,
 
     elevation: 2,
+  },
+  safe: {
+    flex: 1,
+    paddingTop: 20,
+    width: windowWidth,
+    height: windowHeight,
+  },
+  floatTouch: {
+    position: 'absolute',
+    bottom: '5%',
+    right: '5%',
+    backgroundColor: '#DA7200',
+    height: '7%',
+    width: '12%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.53,
+    shadowRadius: 13.97,
+
+    elevation: 5,
+    zIndex: 5,
+  },
+  shadow: {
+    height: 50,
+    width: '90%',
+    paddingLeft: 10,
+    paddingRight: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1,
+    elevation: 1,
+    borderRadius: 10,
+    marginBottom: 5,
   }
 
 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { addDays, format } from 'date-fns';
 import {
   View,
   Text,
@@ -24,12 +25,24 @@ import {
 } from 'react-native-reanimated';
 import { CarteForme } from '../../components/carteForme';
 import { CarteFormeFav } from '../../components/carteFormeF';
-import { Ionicons, AntDesign, Foundation } from '@expo/vector-icons';
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Ionicons,
+  FontAwesome,
+  AntDesign,
+  Foundation,
+  FontAwesome5,
+  Feather,
+  Fontisto,
+} from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
+import Agendas from '../agendas/index'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
 export default function AccueilScanne({ route, navigation }) {
   const { id, Token } = route.params;
   const [SecondData, setSecondData] = React.useState();
@@ -40,6 +53,10 @@ export default function AccueilScanne({ route, navigation }) {
   const [Agenda, setAgenda] = React.useState(false);
   const [Home, setHome] = React.useState(true);
   const [Spinner, setSpinner] = React.useState(true);
+
+  const onPressWrite = () => navigation.navigate('WriteAgenda',{
+    id:id
+  })
 
   React.useEffect(() => {
     // Update the document title using the browser API
@@ -208,7 +225,8 @@ export default function AccueilScanne({ route, navigation }) {
     </View>
   );
 
- 
+ //AGENDA//
+
   //ACCUEILL
   const Accueil = (
     <View style={{ flex: 1 }}>
@@ -368,7 +386,7 @@ if(SecondData?.data){
   return (
     <SafeAreaView style={styles.container}>
       {Loader}
-      <View style={{ flex: 0.4 }}>
+      <View style={{ flex: 0.2 }}>
         <View style={styles.header}>
           <StatusBar animated={true} backgroundColor="#DA7200" />
           <Image
@@ -419,6 +437,7 @@ if(SecondData?.data){
                     setFavoris(false);
                     setHome(true);
                     setHistoriqueS(false);
+                    setAgenda(false)
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -452,6 +471,7 @@ if(SecondData?.data){
                     setFavoris(false);
                     setHome(true);
                     setHistoriqueS(false);
+                    setAgenda(false)
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -488,6 +508,7 @@ if(SecondData?.data){
                     setFavoris(false);
                     setHome(true);
                     setHistoriqueS(false);
+                    setAgenda(false)
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -521,6 +542,7 @@ if(SecondData?.data){
                     setFavoris(false);
                     setHome(false);
                     setHistoriqueS(true);
+                    setAgenda(false)
                   }}>
                   <Icon
                     style={{ alignSelf: 'center' }}
@@ -556,6 +578,7 @@ if(SecondData?.data){
                     setFavoris(false);
                     setHome(true);
                     setHistoriqueS(false);
+                    setAgenda(false)
         
                   }}>
                   <Icon
@@ -590,6 +613,7 @@ if(SecondData?.data){
                     setFavoris(true);
                     setHome(false);
                     setHistoriqueS(false);
+                    setAgenda(false)
         
                   }}>
                   <Icon
@@ -612,17 +636,59 @@ if(SecondData?.data){
               </View>
             )}
             {/* Agenda de rappel  */}
-            <View style={{ margin: 10 }}>
-              <TouchableOpacity
-                style={{
-                  backgroundColor: '#CFCFCF',
-                  width: 50,
-                  height: 50,
-                  borderRadius: 50,
-                  justifyContent: 'center',
-                }}
-                onPress={() => navigation.navigate('Agendas')}>
+            {Agenda == true ? (
+              <View style={{ margin: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#DA7200',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    setFavoris(false);
+                    setHome(true);
+                    setHistoriqueS(false);
+                    setAgenda(false)
+        
+                  }}>
                 <Icon
+                  style={{ alignSelf: 'center' }}
+                  name="view-agenda"
+                  pack="material"
+                  size={30}
+                  color={'#fff'}
+                />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    color: '#DA7200',
+                    fontSize: 11,
+                    marginHorizontal: 5,
+                    textAlign: 'center',
+                  }}>
+                  Agenda
+                </Text>
+              </View>
+            ) : (
+              <View style={{ margin: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#CFCFCF',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 50,
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    setFavoris(false);
+                    setHome(false);
+                    setHistoriqueS(false);
+                    setAgenda(true)
+        
+                  }}>
+                  <Icon
                   style={{ alignSelf: 'center' }}
                   name="view-agenda"
                   pack="material"
@@ -639,7 +705,9 @@ if(SecondData?.data){
                 }}>
                 Agenda
               </Text>
-            </View>
+              </View>
+            )}
+            
             {/* Toutes les cartes */}
           </View>
           <View style={{ height: windowHeight }}>
@@ -689,12 +757,13 @@ if(SecondData?.data){
                     <Text>Aucune Carte en favoris</Text>
                   </View>
                 )}
+                {Agenda && <Agendas onPress={onPressWrite} Alert="ok"/>}
+            
               </View>
             </View>
           </View>
         </View>
       </View>
-
       <BottomBar id={id} Token={Token} Data={SecondData} />
     </SafeAreaView>
   );

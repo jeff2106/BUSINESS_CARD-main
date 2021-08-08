@@ -158,7 +158,7 @@ export default function Inscription({ navigation }) {
         // type === 'cancel'
       }
     } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+      console.log(`Facebook Login Error: ${message}`);
     }
   }
   const handleMessage = (message, type = 'FAILED') => {

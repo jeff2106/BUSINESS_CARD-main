@@ -130,7 +130,7 @@ export default function Connexion({ navigation }) {
         // type === 'cancel'
       }
     } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+    console.log(`Facebook Login Error: ${message}`);
    
     }
   

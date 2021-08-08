@@ -115,7 +115,7 @@ export default function AccueilScanne({ route, navigation }) {
     )
       .then((response) => response.json())
       .then((result) => setDataHistorique(result))
-      .catch((error) => console.log('error', error));
+      .catch((error) => console.log('error fff', error));
   }
 
   const transitionRef = React.useRef();
@@ -125,8 +125,15 @@ export default function AccueilScanne({ route, navigation }) {
   };
 
   React.useEffect(() => {
-    ShowDataHistorique();
-  },[]);
+      ShowDataHistorique();
+    },[]);
+
+    function refreshData(){
+      console.log("called");
+  }
+  setInterval(() => {
+    refreshData();
+  }, 10000);
 
   const Historique = (
     <View>

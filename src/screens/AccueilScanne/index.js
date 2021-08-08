@@ -10,6 +10,7 @@ import {
   FlatList,
   TextInput,
   Dimensions,
+  Linking
 } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -35,10 +36,13 @@ import {
   FontAwesome5,
   Feather,
   Fontisto,
+  Platform
+  
 } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
 import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay';
 import Agendas from '../agendas/index'
+import email from 'react-native-email'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -53,6 +57,21 @@ export default function AccueilScanne({ route, navigation }) {
   const [Agenda, setAgenda] = React.useState(false);
   const [Home, setHome] = React.useState(true);
   const [Spinner, setSpinner] = React.useState(true);
+  const _Linkedin = () => {
+    Linking.openURL(Data.data.card_informations.reseau.linkedin_acound);
+  };
+
+  const _Facebook = () => {
+    Linking.openURL(Data.data.card_informations.reseau.facebook_account);
+  };
+
+  const _InstaGram = () => {
+    Linking.openURL(Data.data.card_informations.reseau.instagram_account);
+  };
+
+  const _Twitter = () => {
+    Linking.openURL(Data.data.card_informations.reseau.tweeter_acound);
+  };
 
   const onPressWrite = () => navigation.navigate('WriteAgenda',{
     id:id
@@ -226,7 +245,18 @@ export default function AccueilScanne({ route, navigation }) {
   );
 
  //AGENDA//
-
+ 
+ const openDialScreen = () => {
+  let number = '';
+  let numero = "0237934963949364"
+  if (Platform.OS === 'ios') {
+    number = `telprompt:${numero}`;
+  } else {
+    number = `tel:${numero}`;
+    
+  }
+  Linking.openURL(number);
+};
   //ACCUEILL
   const Accueil = (
     <TouchableOpacity
@@ -289,7 +319,11 @@ export default function AccueilScanne({ route, navigation }) {
             </View>
           </View>
           <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-            <TouchableOpacity>
+          
+            <TouchableOpacity
+            onPress={() => {
+              const url= `tel://${SecondData?.data.phone_number}`
+              Linking.openURL(url)}}>
               <Foundation
                 name="telephone"
                 size={18}
@@ -297,7 +331,17 @@ export default function AccueilScanne({ route, navigation }) {
                 style={{ marginLeft: 10 }}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity
+            onPress={() => {
+              const to = [`${SecondData?.data.email}`] // string or array of email addresses
+              email(to, {
+                  // Optional additional arguments
+                  //cc: [], // string or array of email addresses
+                  //bcc: 'mee@mee.com', // string or array of email addresses
+                  subject: '',
+                  body: ''
+              }).catch(console.error)
+            }}>
               <Ionicons
                 name="mail"
                 size={18}

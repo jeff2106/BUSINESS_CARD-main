@@ -10,11 +10,13 @@ import {
   TouchableHighlight,
   FlatList,
   LogBox,
+  Linking
 } from 'react-native';
 import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeout from 'react-native-swipeout';
 import {useNavigation} from '@react-navigation/native';
+import email from 'react-native-email'
 
 export const CarteForme = (props,{
   name_proprietaire,
@@ -27,6 +29,9 @@ export const CarteForme = (props,{
 
 }) => {
   const navigation = useNavigation();
+  const _Site = () => {
+    Linking.openURL("https://"+props.entreprise_website);
+  };
   const RenderButtonDelete = () => {
     
     return (
@@ -170,7 +175,8 @@ export const CarteForme = (props,{
                 {props.adresse_proprietaire}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row', margin: 10 }}>
+            <TouchableOpacity 
+            onPress={() => _Site()}style={{ flexDirection: 'row', margin: 10 }}>
               <Icon
                 name="web"
                 size={20}
@@ -178,14 +184,26 @@ export const CarteForme = (props,{
                 pack="material"
               />
               <Text style={{ marginHorizontal: 10 }}>{props.entreprise_website}</Text>
-            </View>
+            </TouchableOpacity>
             <View
               style={{
                 flexDirection: 'row',
                 backgroundColor: '#000',
                 borderBottomEndRadius: 10,
               }}>
-              <View style={{ flexDirection: 'row', margin: 10 }}>
+              <TouchableOpacity style={{ flexDirection: 'row', margin: 10 }}
+              
+              onPress={() => {
+                const to = [`${props.email_proprietaire}`] // string or array of email addresses
+                email(to, {
+                    // Optional additional arguments
+                    //cc: [], // string or array of email addresses
+                    //bcc: 'mee@mee.com', // string or array of email addresses
+                    subject: '',
+                    body: ''
+                }).catch(console.error)
+              }}
+              >
                 <Icon
                   name="email"
                   size={20}
@@ -195,7 +213,7 @@ export const CarteForme = (props,{
                 <Text style={{ marginHorizontal: 10, color: '#fff' }}>
                   {props.email_proprietaire}
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
           <View style={{ marginHorizontal: 10 }}>

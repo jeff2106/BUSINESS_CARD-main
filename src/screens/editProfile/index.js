@@ -27,7 +27,7 @@ import OrientationLoadingOverlay from 'react-native-orientation-loading-overlay'
 export default function EditProfile({ route, navigation }) {
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-  }, []);
+  });
   const { Data, Token, id } = route.params;
 
   const [Nom, setNom] = React.useState(null);

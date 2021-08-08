@@ -75,7 +75,7 @@ export default function AccueilScanne({ route, navigation }) {
       .then((response) => response.json())
       .then((result) => setSecondData(result))
       .catch((error) => console.log('error user', error));
-  },[]);
+  });
 
   //HISTORIQUE
   function ShowDataHistorique() {
@@ -229,37 +229,26 @@ export default function AccueilScanne({ route, navigation }) {
 
   //ACCUEILL
   const Accueil = (
-    <View style={{ flex: 1 }}>
-      <View style={{ marginTop: 10 }}>
-        <Text style={{ textAlign: 'center' }}>
-          Vous n'avez pas de carte de visite
-        </Text>
-      </View>
-
-      <TouchableOpacity
-        style={{ margin: 40 }}
-        onPress={() => {
+    <TouchableOpacity
+    onPress={() => {
           /* 1. Navigate to the Details route with params */
-          navigation.navigate('Profile', {
+          navigation.navigate('EditProfile', {
             id: id,
             Token: Token,
             Data: SecondData,
           });
         }}>
-        <Icon
-          style={{ alignSelf: 'center' }}
-          name="plus"
-          pack="material"
-          size={50}
-          color={'#CACACA'}
-        />
-      </TouchableOpacity>
-      <View style={{ margin: 40 }}>
+      <View
+        
+        >
+        <Text style={{color:'red',textAlign:'center',fontWeight:'bold',fontSize:20}}>Notification</Text>
+      </View>
+      <View style={{ margin: 10 }}>
         <Text style={{ textAlign: 'center', color: '#CACACA' }}>
-          Touchez ici pour créer une carte de visite
+          Completer les informations
         </Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
   //CARTE//
   const Card = (
@@ -701,7 +690,7 @@ if(SecondData?.data){
                   color: '#707070',
                   fontSize: 11,
                   marginHorizontal: 5,
-                  textAlign: 'center',
+                  textAlign: 'center'
                 }}>
                 Agenda
               </Text>
@@ -711,8 +700,12 @@ if(SecondData?.data){
             {/* Toutes les cartes */}
           </View>
           <View style={{ height: windowHeight }}>
+          {Home && !SecondData?.data.card_informations.user_job_position && Card}
+          {Home &&
+              SecondData?.data.card_informations.user_job_position != null &&
+              Card}
             {Home && !SecondData?.data.card_informations.user_job_position && (
-              <View style={{ marginTop: 40 }}>
+              <View style={{ marginTop: 10 }}>
                 <View
                   style={[
                     styles.cardCentral,
@@ -722,10 +715,8 @@ if(SecondData?.data){
                 </View>
               </View>
             )}
-
-            {Home &&
-              SecondData?.data.card_informations.user_job_position != null &&
-              Card}
+            
+            
             <View style={{ marginTop: 40 }}>
               <View
                 style={[

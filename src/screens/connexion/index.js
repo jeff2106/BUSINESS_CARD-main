@@ -78,7 +78,7 @@ export default function Connexion({ navigation }) {
   async function logInFB() {
     try {
       await Facebook.initializeAsync({
-        appId: "857776271524158",
+        appId: "  ",
       });
       const { type, token, expirationDate, permissions, declinedPermissions } =
         await Facebook.logInWithReadPermissionsAsync({

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -10,7 +10,9 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
-} from 'react-native';
+  TouchableHighlight,
+  Linking,
+} from "react-native";
 import {
   MaterialIcons,
   MaterialCommunityIcons,
@@ -21,70 +23,87 @@ import {
   FontAwesome5,
   Feather,
   Fontisto,
-} from '@expo/vector-icons';
+} from "@expo/vector-icons";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import email from 'react-native-email'
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function ResultQrcode({ navigation, route }) {
   const { DetailsUserScanner, id, Token, Data, idCartScaner } = route.params;
   const [activeFav, setActiveFav] = useState(false);
   const [activeVal, setActiveVal] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  
-  
 
   function Favoris() {
     var myHeaders = new Headers();
-    myHeaders.append('Accept', 'application/json');
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-    myHeaders.append('Authorization', 'Bearer ' + Token + '');
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    myHeaders.append("Authorization", "Bearer " + Token + "");
 
     var urlencoded = new URLSearchParams();
-    urlencoded.append('id_style_de_carte', 1);
-    urlencoded.append('id_user', id);
+    urlencoded.append("id_style_de_carte", 1);
+    urlencoded.append("id_user", id);
     urlencoded.append("id_user_de_card", idCartScaner);
 
     var requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: myHeaders,
       body: urlencoded,
-      redirect: 'follow',
+      redirect: "follow",
     };
 
     fetch(
-      'https://agnesmere-sarl.com/carte_visite/api/card/put_card_in_favoris',
+      "https://agnesmere-sarl.com/carte_visite/api/card/put_card_in_favoris",
       requestOptions
     )
       .then((response) => response.text())
       .then((result) => console.log(result))
-      .catch((error) => console.log('error', error));
+      .catch((error) => console.log("error", error));
   }
 
-  
   function Delete() {
-      var myHeaders = new Headers();
-        myHeaders.append("Accept", "application/json");
-        myHeaders.append("Authorization", 'Bearer ' + Token + '');
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+    var myHeaders = new Headers();
+    myHeaders.append("Accept", "application/json");
+    myHeaders.append("Authorization", "Bearer " + Token + "");
+    myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-        var urlencoded = new URLSearchParams();
-        urlencoded.append("id_user_de_card", idCartScaner);
+    var urlencoded = new URLSearchParams();
+    urlencoded.append("id_user_de_card", idCartScaner);
 
-        var requestOptions = {
-          method: 'DELETE',
-          headers: myHeaders,
-          body: urlencoded,
-          redirect: 'follow'
-        };
+    var requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      body: urlencoded,
+      redirect: "follow",
+    };
 
-        console.log(id,idCartScaner);
+    console.log(id, idCartScaner);
 
-        fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+id+"", requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));
+    fetch(
+      "https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/" +
+        id +
+        "",
+      requestOptions
+    )
+      .then((response) => response.text())
+      .then((result) => console.log(result))
+      .catch((error) => console.log("error", error));
+  }
+  const openDialScreen = () => {
+    let number = "";
+    let numero = "0237934963949364";
+    if (Platform.OS === "ios") {
+      number = `telprompt:${numero}`;
+    } else {
+      number = `tel:${numero}`;
     }
+    Linking.openURL(number);
+  };
+  const _Site = () => {
+    Linking.openURL("https://"+entreprise_website);
+  };
 
   return (
     <View style={styles.container}>
@@ -95,7 +114,7 @@ export default function ResultQrcode({ navigation, route }) {
           size={24}
           color="#F07D00"
         />
-        <Text style={{ marginTop: 3, color: '#F07D00', fontWeight: 'bold' }}>
+        <Text style={{ marginTop: 3, color: "#F07D00", fontWeight: "bold" }}>
           Retour
         </Text>
       </View>
@@ -103,26 +122,33 @@ export default function ResultQrcode({ navigation, route }) {
         {activeFav ? (
           <FontAwesome
             onPress={() => {
-                var myHeaders = new Headers();
-                myHeaders.append("Accept", "application/json");
-                myHeaders.append('Authorization', 'Bearer ' + Token + '');
-                
-                var formdata = new FormData();
-                formdata.append("id_user_de_card",idCartScaner);
-                
-                var requestOptions = {
-                  method: 'DELETE',
-                  headers: myHeaders,
-                  body: formdata,
-                  redirect: 'follow'
-                };
-                
-                fetch("https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/"+id+"/"+idCartScaner+"", requestOptions)
-                  .then(response => response.json())
-                  .then(result => console.log(result))
-                  .catch(error => console.log('error', error));setActiveFav(!activeFav)
+              var myHeaders = new Headers();
+              myHeaders.append("Accept", "application/json");
+              myHeaders.append("Authorization", "Bearer " + Token + "");
 
-              }}
+              var formdata = new FormData();
+              formdata.append("id_user_de_card", idCartScaner);
+
+              var requestOptions = {
+                method: "DELETE",
+                headers: myHeaders,
+                body: formdata,
+                redirect: "follow",
+              };
+
+              fetch(
+                "https://agnesmere-sarl.com/carte_visite/api/card/leave_card_in_favoris/" +
+                  id +
+                  "/" +
+                  idCartScaner +
+                  "",
+                requestOptions
+              )
+                .then((response) => response.json())
+                .then((result) => console.log(result))
+                .catch((error) => console.log("error", error));
+              setActiveFav(!activeFav);
+            }}
             name="star"
             size={24}
             color="#F07D00"
@@ -130,33 +156,31 @@ export default function ResultQrcode({ navigation, route }) {
         ) : (
           <FontAwesome
             onPress={() => {
-              
               var myHeaders = new Headers();
-              myHeaders.append('Accept', 'application/json');
-              myHeaders.append('Authorization', 'Bearer ' + Token + '');
-          
+              myHeaders.append("Accept", "application/json");
+              myHeaders.append("Authorization", "Bearer " + Token + "");
+
               var formdata = new FormData();
-              formdata.append('id_style_de_carte', 1);
-              formdata.append('id_user', id);
+              formdata.append("id_style_de_carte", 1);
+              formdata.append("id_user", id);
               formdata.append("id_user_de_card", idCartScaner);
-          
+
               var requestOptions = {
-                method: 'POST',
+                method: "POST",
                 headers: myHeaders,
                 body: formdata,
-                redirect: 'follow',
+                redirect: "follow",
               };
-          
+
               fetch(
-                'https://agnesmere-sarl.com/carte_visite/api/card/put_card_in_favoris',
+                "https://agnesmere-sarl.com/carte_visite/api/card/put_card_in_favoris",
                 requestOptions
               )
                 .then((response) => response.text())
                 .then((result) => console.log(result))
-                .catch((error) => console.log('error', error));
-                setActiveFav(!activeFav)
-
-              }}
+                .catch((error) => console.log("error", error));
+              setActiveFav(!activeFav);
+            }}
             name="star-o"
             size={24}
             color="#F07D00"
@@ -165,112 +189,154 @@ export default function ResultQrcode({ navigation, route }) {
       </View>
       <TouchableOpacity
         onPress={() => setModalVisible(true)}
-        style={styles.cardCentral}>
-        <View style={styles.headers}>
-          <View
-            style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-            <View style={styles.cardPhoto}>
-              {DetailsUserScanner.data.user_picture == null ? (
-                <Image
-                  source={require('../../assets/id.jpg')}
-                  style={{
-                    width: 90,
-                    marginLeft: 8,
-                    height: 90,
-                    borderRadius: 10,
-                  }}
-                />
-              ) : (
-                <Image
-                  style={{
-                    width: 90,
-                    marginLeft: 8,
-                    height: 90,
-                    borderRadius: 10,
-                  }}
-                  source={{
-                    uri: DetailsUserScanner.data.user_picture,
-                  }}
-                />
-              )}
-            </View>
-            <View style={{ marginRight: -20,width:140 }}>
-              <Text style={{ fontWeight: 'bold' }}>
-                {DetailsUserScanner.data.name}
-              </Text>
-              <Text style={{ opacity: 0.5 }}>
-                {DetailsUserScanner.data.card_informations.user_job_position}
-              </Text>
-            </View>
-            <View style={[styles.cardPhoto]}>
-              {/* <FontAwesome5 name="user-alt" size={24} color="grey" /> */}
+        style={styles.CarteForme}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignSelf: "flex-start",
+            margin: 10,
+            width: "78%",
+          }}
+        >
+          <View>
+            {DetailsUserScanner.data.user_picture == null ? (
               <Image
-                style={[styles.ImageQr, { height: '102%', width: '102%' }]}
-                source={{
-                  uri: DetailsUserScanner.data.card_informations.card_qrcode,
+                source={require("../../assets/id.jpg")}
+                style={{
+                  width: 74,
+                  height: 74,
+                  borderRadius: 10,
+                  borderWidth: 3,
+                  borderColor: "#DA7200",
+                  borderRadius: 5,
                 }}
               />
-            </View>
-          </View>
-          <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-            <Foundation
-              name="telephone"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-            <Ionicons
-              name="mail"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-            <AntDesign
-              name="linkedin-square"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
-            <AntDesign
-              name="facebook-square"
-              size={18}
-              color="black"
-              style={{ marginLeft: 10 }}
-            />
+            ) : (
+              <Image
+                style={{
+                  width: 74,
+                  height: 74,
+                  borderRadius: 10,
+                  borderWidth: 3,
+                  borderColor: "#DA7200",
+                  borderRadius: 5,
+                }}
+                source={{
+                  uri: DetailsUserScanner.data.user_picture,
+                }}
+              />
+            )}
           </View>
           <View
             style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              margin: 5,
-            }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Ionicons name="location-sharp" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+              justifyContent: "center",
+              alignItems: "center",
+              width: "78%",
+            }}
+          >
+            <View
+              style={{
+                margin: 10,
+                flexDirection: "row",
+              }}
+            >
+              <Text
+                style={{
+                  marginHorizontal: 5,
+                  color: "#DA7200",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                }}
+              >
+                {DetailsUserScanner.data.name}
+              </Text>
+            </View>
+
+            <Text style={{}}>
+              {DetailsUserScanner.data.card_informations.user_job_position}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#DA7200",
+              width: "70%",
+              alignSelf: "flex-start",
+              borderTopEndRadius: 10,
+              borderBottomEndRadius: 10,
+            }}
+          >
+            <View style={{ flexDirection: "row", margin: 10 }}>
+              <Icon
+                name="map-marker"
+                size={20}
+                color="#A2A2A2"
+                pack="material"
+              />
+              <Text style={{ marginHorizontal: 10 }}>
                 {DetailsUserScanner.data.user_adresse}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Foundation name="web" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+            <View style={{ flexDirection: "row", margin: 10 }}>
+              <Icon name="web" size={20} color="#A2A2A2" pack="material" />
+              <Text style={{ marginHorizontal: 10 }}>
+                www.
                 {DetailsUserScanner.data.card_informations.entreprise_website}
               </Text>
             </View>
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "#000",
+                borderBottomEndRadius: 10,
+              }}
+            >
+              <View style={{ flexDirection: "row", margin: 10 }}>
+                <Icon name="email" size={20} color="#A2A2A2" pack="material" />
+                <Text style={{ marginHorizontal: 10, color: "#fff" }}>
+                  {DetailsUserScanner.data.email}
+                </Text>
+              </View>
+            </View>
           </View>
+          <View style={{ marginHorizontal: 10 }}>
+            <Image
+              style={{
+                width: 70,
+                height: 70,
+                borderWidth: 3,
+                borderColor: "#DA7200",
+                borderRadius: 5,
+              }}
+              source={{
+                uri: DetailsUserScanner.data.card_informations.card_qrcode,
+              }}
+            />
+          </View>
+          {/* <QR code */}
+          {/* <Image
+             style={[styles.ImageQr, { height: "100%", width: "100%" }]}
+             source={{ uri: Data.data.card_informations.card_qrcode }}
+           /> */}
         </View>
-        <View style={styles.footer}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ marginRight: 10, color: 'white', marginTop: 5 }}>
-              {DetailsUserScanner.data.card_informations.entreprise_name}
-            </Text>
-            <AntDesign name="chrome" size={24} color="white" />
-          </View>
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: "bold", color: "#DA7200" }}>
+            {DetailsUserScanner.data.card_informations.entreprise_name}
+          </Text>
         </View>
       </TouchableOpacity>
 
       {activeVal ? (
         <View style={styles.exportStyle}>
-          <Text style={{ textAlign: 'center' }}>
+          <Text style={{ textAlign: "center" }}>
             <FontAwesome5 name="file-export" size={24} color="black" /> exporter
             la carte
           </Text>
@@ -282,19 +348,21 @@ export default function ResultQrcode({ navigation, route }) {
       {activeVal ? (
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('AccueilScanne', {
+            navigation.navigate("AccueilScanne", {
               id: id,
               Data: Data,
               Token: Token,
             })
           }
-          style={[styles.floatTouch, { height: 65, width: 65 }]}>
+          style={[styles.floatTouch, { height: 65, width: 65 }]}
+        >
           <Fontisto name="hipchat" size={24} color="white" />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
           onPress={() => setActiveVal(!activeVal)}
-          style={[styles.floatTouch, { height: 65, width: 65 }]}>
+          style={[styles.floatTouch, { height: 65, width: 65 }]}
+        >
           <Feather name="check" size={24} color="white" />
         </TouchableOpacity>
       )}
@@ -304,11 +372,12 @@ export default function ResultQrcode({ navigation, route }) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
+          Alert.alert("Modal has been closed.");
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <ScrollView>
-          <TouchableOpacity
+        <TouchableOpacity
             onPress={() => setModalVisible(!modalVisible)}
             style={styles.headback}>
             <Ionicons
@@ -339,8 +408,9 @@ export default function ResultQrcode({ navigation, route }) {
               />
             )}
           </View>
+
           <View style={styles.modalView}>
-            <TouchableOpacity
+          <TouchableOpacity
               onPress={() => setModalVisible(!modalVisible)}
               style={styles.headback}>
               <Ionicons
@@ -371,68 +441,321 @@ export default function ResultQrcode({ navigation, route }) {
                 />
               )}
             </View>
+
             <View style={styles.bodyModal}>
-              <View style={styles.cardPro1}>
-                <View style={styles.profilCard}>
-                  {DetailsUserScanner.data.user_picture == null ? (
-                    <Image
-                      source={require('../../assets/id.jpg')}
-                      style={{ width: 130, height: 130, borderRadius: 10 }}
-                    />
-                  ) : (
-                    <Image
-                      style={{ width: 130, height: 130, borderRadius: 10 }}
-                      source={{
-                        uri: DetailsUserScanner.data.user_picture,
-                      }}
-                    />
-                  )}
-                </View>
+              <View
+                style={{
+                  alignItems: "center",
+                  zIndex: 1,
+                  top: -50,
+                }}
+              >
+                {DetailsUserScanner.data.user_picture == null ? (
+                  <Image
+                    source={require("../../assets/id.jpg")}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      borderRadius: 50,
+                      zIndex: 1,
+                      marginHorizontal: 20,
+                    }}
+                  />
+                ) : (
+                  <Image
+                    style={{ width: 130, height: 130, borderRadius: 10 }}
+                    source={{
+                      uri: DetailsUserScanner.data.user_picture,
+                    }}
+                  />
+                )}
                 <View>
                   <Text
                     style={{
-                      fontWeight: 'bold',
-                      letterSpacing: 2,
-                      width: '65%',
-                    }}>
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      marginBottom: 10,
+                      textAlign: "center",
+                    }}
+                  >
                     {DetailsUserScanner.data.name}
                   </Text>
-
-                  <Text style={{ opacity: 0.5 }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: "#1B1717",
+                      marginBottom: 5,
+                      textAlign: "center",
+                    }}
+                  >
                     {
                       DetailsUserScanner.data.card_informations
                         .user_job_position
                     }
-                    {'\n'}
                   </Text>
-                  <Text style={{ opacity: 0.5, width: '65%' }}>
-                    {DetailsUserScanner.data.user_biographie}
+                  <Text style={{ fontSize: 15, textAlign: "center" }}>
+                    {DetailsUserScanner.data.card_informations.entreprise_name}
                   </Text>
                 </View>
               </View>
-              <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                <TouchableOpacity style={styles.rond}>
-                  <AntDesign name="linkedin-square" size={24} color="#007BB5" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rond}>
-                  <FontAwesome
-                    name="facebook-square"
-                    size={24}
-                    color="#3B5998"
+              {/* icon show */}
+              <View
+                style={{
+                  width: "100%",
+                  alignItems: "center",
+                  top: -20,
+                }}
+              >
+                {/* first show */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "80%",
+                    alignContent: "center",
+                  }}
+                >
+                  {/* Accueil */}
+                  <View style={{ margin: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DA7200",
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        justifyContent: "center",
+                      }}
+                      onPress={() => {
+                        const url = `tel://${DetailsUserScanner?.data.phone_number}`;
+                        Linking.openURL(url);
+                      }}
+                    >
+                      <Icon
+                        style={{ alignSelf: "center" }}
+                        name="cellphone"
+                        pack="material"
+                        size={30}
+                        color={"#fff"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 11,
+                        marginHorizontal: 5,
+                        textAlign: "center",
+                      }}
+                    >
+                      Appeler
+                    </Text>
+                    <View></View>
+                  </View>
+                  {/* Historique */}
+                  <View style={{ margin: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DA7200",
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        justifyContent: "center",
+                      }}
+                      onPress={() => console.log("ok")}
+                    >
+                      <Icon
+                        style={{ alignSelf: "center" }}
+                        name="whatsapp"
+                        pack="material"
+                        size={30}
+                        color={"#fff"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#707070",
+                        fontSize: 11,
+                        textAlign: "center",
+                      }}
+                    >
+                      Whatsapp
+                    </Text>
+                  </View>
+                  {/* Favoris */}
+                  <View style={{ margin: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DA7200",
+                        width: 50,
+                        height: 50, 
+                        borderRadius: 50,
+                        justifyContent: "center",
+                      }}
+                      onPress={() => {
+                        const to = [`${DetailsUserScanner?.data.email}`] // string or array of email addresses
+                        email(to, {
+                            // Optional additional arguments
+                            //cc: [], // string or array of email addresses
+                            //bcc: 'mee@mee.com', // string or array of email addresses
+                            subject: '',
+                            body: ''
+                        }).catch(console.error)
+                      }}
+                    >
+                      <Icon
+                        style={{ alignSelf: "center" }}
+                        name="email"
+                        pack="material"
+                        size={30}
+                        color={"#fff"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#707070",
+                        fontSize: 11,
+                        marginHorizontal: 5,
+                        textAlign: "center",
+                      }}
+                    >
+                      Email
+                    </Text>
+                  </View>
+                </View>
+                {/* end first  */}
+
+                {/* second show */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "98%",
+                    alignContent: "center",
+                  }}
+                >
+                  {/* Accueil */}
+                  <View style={{ margin: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DA7200",
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        justifyContent: "center",
+                        alignSelf: "center",
+                      }}
+                      onPress={() => console.log("ok")}
+                    >
+                      <Icon
+                        style={{ alignSelf: "center" }}
+                        name="bio"
+                        pack="material"
+                        size={30}
+                        color={"#fff"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 11,
+                        marginHorizontal: 5,
+                        textAlign: "center",
+                      }}
+                    >
+                      Ma biographie
+                    </Text>
+                  </View>
+                  {/* Historique */}
+                  <View style={{ margin: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DA7200",
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        justifyContent: "center",
+                        alignSelf: "center",
+                      }}
+                      onPress={() => _Site()}
+                    >
+                      <Icon
+                        style={{ alignSelf: "center" }}
+                        name="file-document"
+                        pack="material"
+                        size={30}
+                        color={"#fff"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#707070",
+                        fontSize: 11,
+                        textAlign: "center",
+                      }}
+                    >
+                      Mes documents
+                    </Text>
+                  </View>
+                  {/* Favoris */}
+                  <View style={{ margin: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#DA7200",
+                        width: 50,
+                        height: 50,
+                        borderRadius: 50,
+                        justifyContent: "center",
+                        alignSelf: "center",
+                      }}
+                      onPress={() =>
+                        navigation.navigate("Portfolio", {
+                          id: id,
+                          Token: Token,
+                        })
+                      }
+                    >
+                      <Icon
+                        style={{ alignSelf: "center" }}
+                        name="folder-open"
+                        pack="material"
+                        size={30}
+                        color={"#fff"}
+                      />
+                    </TouchableOpacity>
+                    <Text
+                      style={{
+                        color: "#707070",
+                        fontSize: 11,
+                        marginHorizontal: 5,
+                        textAlign: "center",
+                      }}
+                    >
+                      Mon portfolio
+                    </Text>
+                  </View>
+                </View>
+                {/* end first  */}
+                <View style={{ flexDirection: "row" }}>
+                  <Icon
+                    style={{ alignSelf: "center" }}
+                    name="map-marker"
+                    pack="material"
+                    size={30}
+                    color={"#000"}
                   />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rond}>
-                  <AntDesign name="instagram" size={24} color="#C32AA3" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.rond}>
-                  <FontAwesome
-                    name="twitter-square"
-                    size={24}
-                    color="#1DA1F2"
-                  />
-                </TouchableOpacity>
+                  <Text
+                    style={{
+                      color: "#707070",
+                      fontSize: 11,
+                      marginHorizontal: 5,
+                      textAlign: "center",
+                      top: 5,
+                    }}
+                  >
+                    Cocody,II plateaux Vallons
+                  </Text>
+                </View>
               </View>
-              <View>
+              {/* <View>
                 <TextInput
                   style={styles.TextInput}
                   placeholder="Ecrivez une note ici..."
@@ -442,11 +765,12 @@ export default function ResultQrcode({ navigation, route }) {
                 <View
                   style={{
                     height: 50,
-                    backgroundColor: 'rgba(207, 207, 207, 0.8)',
+                    backgroundColor: "rgba(207, 207, 207, 0.8)",
                     width: 60,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <Foundation name="telephone" size={35} color="black" />
                 </View>
                 <View>
@@ -455,75 +779,19 @@ export default function ResultQrcode({ navigation, route }) {
                     +225 {DetailsUserScanner.data.phone_number}
                   </Text>
                 </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.SousCard}>
-                <View
-                  style={{
-                    height: 50,
-                    backgroundColor: 'rgba(207, 207, 207, 0.8)',
-                    width: 60,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Ionicons name="mail" size={30} color="black" />
-                </View>
-                <View>
-                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Email</Text>
-                  <Text style={{ marginLeft: 5, marginTop: 5 }}>
-                    {DetailsUserScanner.data.email}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.SousCard}>
-                <View
-                  style={{
-                    height: 50,
-                    backgroundColor: 'rgba(207, 207, 207, 0.8)',
-                    width: 60,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Ionicons name="location-sharp" size={30} color="black" />
-                </View>
-                <View>
-                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Adresse</Text>
-                  <Text style={{ marginLeft: 5, marginTop: 5 }}>
-                    {DetailsUserScanner.data.user_adresse}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.SousCard}>
-                <View
-                  style={{
-                    height: 50,
-                    backgroundColor: 'rgba(207, 207, 207, 0.8)',
-                    width: 60,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Foundation name="web" size={30} color="black" />
-                </View>
-                <View>
-                  <Text style={{ marginLeft: 5, marginTop: 5 }}>Site web</Text>
-                  <Text style={{ marginLeft: 5 }}>
-                    {
-                      DetailsUserScanner.data.card_informations
-                        .entreprise_website
-                    }
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <Text style={{ fontSize: 16, marginTop: 10 }}>Document</Text>
 
               {DetailsUserScanner.data.document == null ? (
-                <Text style={{ textAlign: 'center' }}>Aucun document</Text>
+                <Text style={{ textAlign: "center" }}>Aucun document</Text>
               ) : (
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: "row" }}>
                   <TouchableOpacity
-                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}
+                  >
                     <FontAwesome name="file-pdf-o" size={24} color="#FF0014" />
                     <Text style={{ fontSize: 5 }}>
-                      {'\n'}telecharger Document{'\n'}
+                      {"\n"}telecharger Document{"\n"}
                     </Text>
                     <MaterialIcons
                       name="file-download"
@@ -532,14 +800,15 @@ export default function ResultQrcode({ navigation, route }) {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}
+                  >
                     <MaterialCommunityIcons
                       name="file-word"
                       size={24}
                       color="#0C41A8"
                     />
                     <Text style={{ fontSize: 5 }}>
-                      {'\n'}telecharger Document{'\n'}
+                      {"\n"}telecharger Document{"\n"}
                     </Text>
                     <MaterialIcons
                       name="file-download"
@@ -548,10 +817,11 @@ export default function ResultQrcode({ navigation, route }) {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}
+                  >
                     <FontAwesome name="file-pdf-o" size={24} color="#FF0014" />
                     <Text style={{ fontSize: 5 }}>
-                      {'\n'}telecharger Document{'\n'}
+                      {"\n"}telecharger Document{"\n"}
                     </Text>
                     <MaterialIcons
                       name="file-download"
@@ -560,14 +830,15 @@ export default function ResultQrcode({ navigation, route }) {
                     />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[styles.rond, { borderRadius: 10, height: 80 }]}>
+                    style={[styles.rond, { borderRadius: 10, height: 80 }]}
+                  >
                     <MaterialCommunityIcons
                       name="file-word"
                       size={24}
                       color="#0C41A8"
                     />
                     <Text style={{ fontSize: 5 }}>
-                      {'\n'}telecharger Document{'\n'}
+                      {"\n"}telecharger Document{"\n"}
                     </Text>
                     <MaterialIcons
                       name="file-download"
@@ -583,18 +854,20 @@ export default function ResultQrcode({ navigation, route }) {
         {activeVal ? (
           <TouchableOpacity
             onPress={() =>
-              navigation.navigate('AccueilScanne', {
+              navigation.navigate("AccueilScanne", {
                 id: id,
                 Token: Token,
               })
             }
-            style={[styles.floatTouch, { height: 65, width: 65 }]}>
+            style={[styles.floatTouch, { height: 65, width: 65 }]}
+          >
             <Fontisto name="hipchat" size={24} color="white" />
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             onPress={() => setActiveVal(!activeVal)}
-            style={[styles.floatTouch, { height: 65, width: 65 }]}>
+            style={[styles.floatTouch, { height: 65, width: 65 }]}
+          >
             <Feather name="check" size={24} color="white" />
           </TouchableOpacity>
         )}
@@ -607,16 +880,16 @@ export default function ResultQrcode({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     width: windowWidth,
     height: windowHeight,
-    marginTop: '5%',
+    marginTop: "5%",
   },
   headback: {
-    position: 'absolute',
-    top: '5%',
-    left: '5%',
-    flexDirection: 'row',
+    position: "absolute",
+    top: "5%",
+    left: "5%",
+    flexDirection: "row",
   },
   headFav: {
     position: 'absolute',
@@ -630,22 +903,22 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   footer: {
-    backgroundColor: '#DA7200',
-    height: '30%',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    alignSelf: 'center',
+    backgroundColor: "#DA7200",
+    height: "30%",
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    alignSelf: "center",
     paddingRight: 15,
   },
   cardCentral: {
     height: windowHeight / 3.5,
-    width: '90%',
-    alignSelf: 'center',
-    backgroundColor: 'blue',
+    width: "90%",
+    alignSelf: "center",
+    backgroundColor: "blue",
     borderRadius: 20,
-    overflow: 'hidden',
-    shadowColor: '#000',
+    overflow: "hidden",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -656,37 +929,37 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   headers: {
-    backgroundColor: 'white',
-    width: '100%',
-    height: '70%',
+    backgroundColor: "white",
+    width: "100%",
+    height: "70%",
     paddingRight: 15,
-    justifyContent: 'flex-end',
+    justifyContent: "flex-end",
     flex: 1,
   },
   cardPhoto: {
     height: windowHeight / 10,
-    backgroundColor: 'rgba(207, 207, 207, 0.2)',
-    width: '22%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(207, 207, 207, 0.2)",
+    width: "22%",
+    justifyContent: "center",
+    alignItems: "center",
     marginLeft: 10,
     borderRadius: 10,
   },
   ImageQr: {
-    resizeMode: 'contain',
-    height: '80%',
+    resizeMode: "contain",
+    height: "80%",
   },
   floatTouch: {
-    position: 'absolute',
-    bottom: '10%',
-    right: '5%',
-    backgroundColor: '#DA7200',
-    height: '10%',
-    width: '18%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: "absolute",
+    bottom: "10%",
+    right: "5%",
+    backgroundColor: "#DA7200",
+    height: "10%",
+    width: "18%",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 100,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 10,
@@ -698,36 +971,34 @@ const styles = StyleSheet.create({
   },
   modalView: {
     padding: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     height: windowHeight,
   },
   bodyModal: {
     flex: 1,
-    justifyContent: 'center',
-    marginTop: '25%',
-    marginBottom: '5%',
+    justifyContent: "center",
   },
   cardPro1: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   profilCard: {
     height: 100,
-    width: '40%',
+    width: "40%",
     marginLeft: 0,
     marginRight: 5,
-    alignItems: 'center',
-    backgroundColor: 'rgba(207, 207, 207, 0.2)',
-    justifyContent: 'center',
+    alignItems: "center",
+    backgroundColor: "rgba(207, 207, 207, 0.2)",
+    justifyContent: "center",
     borderRadius: 10,
   },
   rond: {
     height: 60,
     width: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     margin: 10,
     borderRadius: 100,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 10,
@@ -738,7 +1009,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   TextInput: {
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 10,
@@ -754,7 +1025,7 @@ const styles = StyleSheet.create({
   },
   SousCard: {
     height: 50,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 10,
@@ -763,21 +1034,21 @@ const styles = StyleSheet.create({
     shadowRadius: 13.97,
 
     elevation: 2,
-    backgroundColor: 'rgba(207, 207, 207, 0.2)',
+    backgroundColor: "rgba(207, 207, 207, 0.2)",
     marginTop: 10,
     borderRadius: 10,
-    overflow: 'hidden',
-    flexDirection: 'row',
+    overflow: "hidden",
+    flexDirection: "row",
   },
   exportStyle: {
     height: 50,
     marginTop: 20,
-    width: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
+    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
     borderRadius: 100,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 12,
@@ -786,5 +1057,19 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
 
     elevation: 2,
+  },
+  CarteForme: {
+    borderRadius: 10,
+    backgroundColor: "#fff",
+    width: "91%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 1,
+    elevation: 1,
+    zIndex: 1,
+    alignItems: "center",
+    alignSelf: "center",
+    margin: 10,
   },
 });

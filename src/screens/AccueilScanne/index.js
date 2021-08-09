@@ -289,120 +289,150 @@ export default function AccueilScanne({ route, navigation }) {
   );
   //CARTE//
   const Card = (
-    <View style={{ marginTop: 20 }}>
-      <View style={styles.cardCentral}>
-        <View style={styles.headers}>
-          <View
-            style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-            <View style={styles.cardPhoto}>
-              {SecondData?.data.user_picture == null ? (
-                <Image
-                  source={require('../../assets/id.jpg')}
-                  style={{ width: 74, height: 74, borderRadius: 10 }}
-                />
-              ) : (
-                <Image
-                  style={{ width: 74, height: 74, borderRadius: 10 }}
-                  source={{
-                    uri: SecondData?.data.user_picture,
-                  }}
-                />
-              )}
-            </View>
-            <View style={{ marginRight: -20,width:140 }}>
-              <Text style={{ fontWeight: 'bold', letterSpacing: 2 }}>
-                {SecondData?.data.name}
-              </Text>
-              <Text style={{ textAlign: 'center', opacity: 0.5 }}>
-                {SecondData?.data.card_informations.user_job_position}
-              </Text>
-            </View>
-            <View style={[styles.cardPhoto]}>
-              {/* <FontAwesome5 name="user-alt" size={24} color="grey" /> */}
+    <SafeAreaView >
+      <View style={styles.CarteForme}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: "flex-start",
+          margin: 10,
+          width: "78%",
+        }}
+      >
+          <View>
+            {SecondData?.data.user_picture == null ? (
               <Image
-                style={[styles.ImageQr, { height: '100%', width: '100%' }]}
-                source={{ uri: SecondData?.data.card_informations.card_qrcode }}
+                source={require("../../assets/id.jpg")}
+                style={{
+                  width: 74,
+                  height: 74,
+                  borderRadius: 10,
+                  borderWidth: 3,
+                  borderColor: "#DA7200",
+                  borderRadius: 5,
+                }}
               />
-            </View>
-          </View>
-          <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
-          
-            <TouchableOpacity
-            onPress={() => {
-              const url= `tel://${SecondData?.data.phone_number}`
-              Linking.openURL(url)}}>
-              <Foundation
-                name="telephone"
-                size={18}
-                color="black"
-                style={{ marginLeft: 10 }}
+            ) : (
+              <Image
+                style={{
+                  width: 74,
+                  height: 74,
+                  borderRadius: 10,
+                  borderWidth: 3,
+                  borderColor: "#DA7200",
+                  borderRadius: 5,
+                }}
+                source={{
+                  uri: SecondData?.data.user_picture,
+                }}
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-            onPress={() => {
-              const to = [`${SecondData?.data.email}`] // string or array of email addresses
-              email(to, {
-                  // Optional additional arguments
-                  //cc: [], // string or array of email addresses
-                  //bcc: 'mee@mee.com', // string or array of email addresses
-                  subject: '',
-                  body: ''
-              }).catch(console.error)
-            }}>
-              <Ionicons
-                name="mail"
-                size={18}
-                color="black"
-                style={{ marginLeft: 10 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <AntDesign
-                name="linkedin-square"
-                size={18}
-                color="black"
-                style={{ marginLeft: 10 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <AntDesign
-                name="facebook-square"
-                size={18}
-                color="black"
-                style={{ marginLeft: 10 }}
-              />
-            </TouchableOpacity>
+            )}
           </View>
           <View
             style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              margin: 5,
-            }}>
-            <View style={{ flexDirection: 'row' }}>
-              <Ionicons name="location-sharp" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+              justifyContent: "center",
+              alignItems: "center",
+              width: "78%",
+            }}
+          >
+            <View
+              style={{
+                margin: 10,
+                flexDirection: "row",
+              }}
+            >
+              <Text
+                style={{
+                  marginHorizontal: 5,
+                  color: "#DA7200",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                }}
+              >
+                {SecondData?.data.name}
+              </Text>
+            </View>
+
+            <Text style={{}}>
+              {SecondData?.data.card_informations.user_job_position}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#DA7200",
+              width: "70%",
+              alignSelf: "flex-start",
+              borderTopEndRadius: 10,
+              borderBottomEndRadius: 10,
+            }}
+          >
+            <View style={{ flexDirection: "row", margin: 10 }}>
+              <Icon
+                name="map-marker"
+                size={20}
+                color="#A2A2A2"
+                pack="material"
+              />
+              <Text style={{ marginHorizontal: 10 }}>
                 {SecondData?.data.user_adresse}
               </Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <Foundation name="web" size={18} color="black" />
-              <Text style={{ fontSize: 12, marginLeft: 5, marginTop: 3 }}>
+            <View style={{ flexDirection: "row", margin: 10 }}>
+              <Icon name="web" size={20} color="#A2A2A2" pack="material" />
+              <Text style={{ marginHorizontal: 10 }}>
                 www.{SecondData?.data.card_informations.entreprise_website}
               </Text>
             </View>
+            <View
+              style={{
+                flexDirection: "row",
+                backgroundColor: "#000",
+                borderBottomEndRadius: 10,
+              }}
+            >
+              <View style={{ flexDirection: "row", margin: 10 }}>
+                <Icon name="email" size={20} color="#A2A2A2" pack="material" />
+                <Text style={{ marginHorizontal: 10, color: "#fff" }}>
+                {SecondData?.data.email}
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
-        <View style={styles.footer}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={{ marginRight: 10, color: 'white', marginTop: 3 }}>
-              {SecondData?.data.card_informations.entreprise_name}
-            </Text>
-            <AntDesign name="chrome" size={24} color="white" />
+          <View style={{ marginHorizontal: 10 }}>
+          <Image 
+                style={{
+                  width: 70,
+                  height: 70,
+                  borderWidth: 3,
+                  borderColor: '#DA7200',
+                  borderRadius: 5,
+                }}
+                source={{
+                  uri: SecondData?.data.card_informations.card_qrcode,
+              }}
+            />
           </View>
+          {/* <QR code */}
+          {/* <Image
+            style={[styles.ImageQr, { height: "100%", width: "100%" }]}
+            source={{ uri: SecondData?.data.card_informations.card_qrcode }}
+          /> */}
         </View>
-      </View>
-    </View>
+        <View>
+          <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DA7200' }}>
+          {SecondData?.data.card_informations.entreprise_name}
+          </Text>
+        </View>
+        </View>
+    </SafeAreaView>
   );
 //Spinner
 let Loader 
@@ -758,10 +788,7 @@ if(SecondData?.data){
             {Home && !SecondData?.data.card_informations.user_job_position && (
               <View style={{ marginTop: 10 }}>
                 <View
-                  style={[
-                    styles.cardCentral,
-                    { backgroundColor: null, borderRadius: null },
-                  ]}>
+                  >
                   {Accueil}
                 </View>
               </View>

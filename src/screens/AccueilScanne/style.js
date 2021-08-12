@@ -343,6 +343,47 @@ export default StyleSheet.create({
     elevation: 1,
     borderRadius: 10,
     marginBottom: 5,
-  }
+  },
+  footerContainer: {
+    position: "absolute",
+    bottom: 0,
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    height: 70,
+    alignSelf: "center",
+    elevation: 3,
+    right: 0,
+    left: 0,
+  },
+
+  footerContentCentered: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  footerFavContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  footerCartContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  footerVoiceContainer: {
+    // elevation: 3,
+    height: 70,
+    width: 70,
+    backgroundColor: "#DA7200",
+    borderRadius: 35,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: 60,
+    marginLeft: 30
+  },
 
 });

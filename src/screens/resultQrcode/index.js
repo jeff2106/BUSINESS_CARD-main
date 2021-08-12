@@ -187,8 +187,7 @@ export default function ResultQrcode({ navigation, route }) {
           />
         )}
       </View>
-      <TouchableOpacity
-        onPress={() => setModalVisible(true)}
+      <View
         style={styles.CarteForme}
       >
         <View
@@ -332,15 +331,13 @@ export default function ResultQrcode({ navigation, route }) {
             {DetailsUserScanner.data.card_informations.entreprise_name}
           </Text>
         </View>
-      </TouchableOpacity>
+      </View>
 
       {activeVal ? (
-        <View style={styles.exportStyle}>
-          <Text style={{ textAlign: "center" }}>
-            <FontAwesome5 name="file-export" size={24} color="black" /> exporter
-            la carte
+        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.exportStyle}>
+          <Text style={{ textAlign: "center", fontSize: 16 }}> Voir les details de la carte
           </Text>
-        </View>
+        </TouchableOpacity>
       ) : (
         <Text></Text>
       )}

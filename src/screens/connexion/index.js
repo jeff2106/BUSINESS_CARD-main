@@ -219,14 +219,14 @@ const loginGoogle = () => {
         
         <TextInput
           style={styles.textInput}
-          placeholder="Numéro de téléphone ou email"
+          placeholder="Votre email"
           onChangeText={(text) => setUserMail(text)}
         />
-        <View style={[styles.row, styles.justifyCenter, styles.shadow]}>
+        <View style={[styles.row, styles.justifyCenter, styles.colorGray]}>
           <TextInput
             secureTextEntry={checkPassword}
             style={styles.textInput2}
-            placeholder="Mot de passed"
+            placeholder="Votre mot de passe"
             onChangeText={(UserPsw) => setUserPsw(UserPsw)}
           />
           {checkPassword ? (
@@ -310,20 +310,22 @@ const styles = StyleSheet.create({
     height: 50,
     width: '90%',
     paddingLeft: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1,
-    elevation: 1,
+    backgroundColor: '#F5F5F5',
     borderRadius: 10,
-    marginBottom: 25,
+    marginBottom: 15,
   },
   textInput2: {
     height: 50,
     width: '90%',
+  },
+  colorGray: {
+    height: 50,
+    width: '90%',
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 10,
+    marginBottom: 25
   },
   shadow: {
     height: 50,

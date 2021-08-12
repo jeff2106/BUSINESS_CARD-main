@@ -46,6 +46,7 @@ export default function Agendas(props) {
           date: format(date, 'yyyy-MM-dd'),
         };
       });
+      
       const reduced = mappedData.reduce((acc, currentItem) => {
         const { date, ...coolItem } = currentItem;
         acc[date] = [coolItem];
